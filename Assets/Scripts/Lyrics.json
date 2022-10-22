@@ -1,0 +1,20 @@
+{
+  "symbol": [
+    {
+      "time": 1,
+      "symbol": "a"
+    },
+    {
+      "time": 2,
+      "symbol": "b"
+    },
+    {
+      "time": 3,
+      "symbol": "b"
+    },
+    {
+      "time": 5,
+      "symbol": "c"
+    }
+  ]
+}
