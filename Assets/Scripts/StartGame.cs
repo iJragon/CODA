@@ -14,6 +14,8 @@ public class StartGame : MonoBehaviour {
     [SerializeField] private GameObject accuracy_Text;
     [SerializeField] private GameObject taskbarGlow;
     [SerializeField] private GameObject taskbarUnglow;
+    [SerializeField] private GameObject instructions;
+    [SerializeField] private GameObject title;
 
     private float fadeInFactor = 0.5f;
     private bool isFading;
@@ -43,6 +45,8 @@ public class StartGame : MonoBehaviour {
         start_Wallpaper.SetActive(false);
         CODA_Icon.SetActive(false);
         CODA_App.SetActive(true);
+        instructions.SetActive(false);
+        title.SetActive(false);
         taskbarGlow.SetActive(true);
         game_Video.SetActive(true);
         accuracy_Text.SetActive(true);
@@ -54,6 +58,8 @@ public class StartGame : MonoBehaviour {
         start_Wallpaper.SetActive(true);
         CODA_Icon.SetActive(true);
         CODA_App.SetActive(false);
+        instructions.SetActive(true);
+        title.SetActive(true);
         taskbarGlow.SetActive(false);
         taskbarUnglow.SetActive(true);
         game_Video.SetActive(false);
