@@ -26,6 +26,7 @@ public class Symbol : MonoBehaviour {
 
     public void SetSprite(Sprite sprite) {
         gameObject.GetComponent<SpriteRenderer>().sprite = sprite;
+        gameObject.GetComponent<SpriteRenderer>().sortingOrder = 5;
     }
 
     public float GetWidth() {
