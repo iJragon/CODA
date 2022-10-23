@@ -4,7 +4,7 @@ from turtle import width
 import cv2
 import numpy as np
 import time
-from pathlib import Path
+
 
 ground_truths = {}
 path = "./realistic.jpg"
@@ -70,22 +70,12 @@ def GetLetterSubImage(src, dim):
 im_raw = cv2.imread(path)
 resize, resize_ratio = ResizeWithAspectRatio(im_raw, width=1000)
 
+'''
+    slice and capture the pictures for each image
+'''
 for letter in ground_truths.keys():
     print(letter)
     img = GetLetterSubImage(resize, ground_truths.get(letter))
     path = "./out/ground-truth/" + str(letter) + ".png"
     print(path)
     cv2.imwrite(path, img)
-
-'''
-while(1):
-    cv2.imshow("reference", resize)
-    cv2.imshow("A", )  
-    time.sleep(0.25)
-
-    # Press Q on keyboard to stop recording
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-      break
-
-print(ground_truths_static)
-'''
