@@ -10,7 +10,6 @@ class Mode(Enum):
   WEBCAM_EX = 1
   RECORDING = 2
   PICTURE = 3
-  PICTURE_COMPLETE = 4
 
 # initializations
 m = Mode.PICTURE
@@ -35,6 +34,8 @@ mpDraw = mp.solutions.drawing_utils
  
 pTime = 0
 cTime = 0
+
+iteration = 0
  
 while True:
     if (m == Mode.PICTURE):
@@ -52,12 +53,13 @@ while True:
     if results.multi_hand_landmarks:
         for handLms in results.multi_hand_landmarks:
             for id, lm in enumerate(handLms.landmark):
-                # print(id, lm)
+                print("lm shape",id, lm) # lm has three dimensions which we can use to determine pose
+
                 h, w, c = img.shape
                 cx, cy = int(lm.x * w), int(lm.y * h)
                 print(id, cx, cy)
                 # if id == 4:
-                cv2.circle(img, (cx, cy), 15, (255, 0, 255), cv2.FILLED)
+                cv2.circle(img, (cx, cy), 8, (40, 100, 255), cv2.FILLED)
  
             mpDraw.draw_landmarks(img, handLms, mpHands.HAND_CONNECTIONS)
  
@@ -69,6 +71,9 @@ while True:
                 (255, 0, 255), 3)
  
     cv2.imshow("Image", img)
+    if iteration == 0:
+        cv2.imwrite("./out/annotations/single_test.png", img)
+        iteration += 1
 
     # Press Q on keyboard to stop recording
     if cv2.waitKey(1) & 0xFF == ord('q'):
