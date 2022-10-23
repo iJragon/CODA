@@ -51,15 +51,25 @@ public class LyricGenerator : MonoBehaviour {
         reader = gameObject.GetComponent<JSONReader>();
 
         /* Map the alphanumeric to its corresponding image */
-        for (int i = 0; i < alphabet.Length; i++)
-            charToSprite.Add((char)('a' + i), alphabet[i]);
+        for (int i = 0; i < alphabet.Length; i++) {
+            if (i <= 25)
+                charToSprite.Add((char)('a' + i), alphabet[i]);
+            else if (i <= 30)
+                charToSprite.Add((char)('1' + (i - 26)), alphabet[i]);
+            else {
+                if (i == 31)
+                    charToSprite.Add('<', alphabet[i]);
+                else if (i == 32)
+                    charToSprite.Add('>', alphabet[i]);
+            }
+        }
 
         /* Start with the first symbol */
         currTimer = 0f;
         currSymbolIndex = 0;
         spawnIndex = currSymbolIndex;
         isForwards = true;
-        nextSymbolArrival = reader.mySymbolList.symbol[currSymbolIndex].time;
+        nextSymbolArrival = reader.mySymbolList.symbol[currSymbolIndex].time - 3f;
         nextSymbol = char.ToLower(reader.mySymbolList.symbol[currSymbolIndex].symbol[0]);
 
         /* Reset accuracy to 100% */
@@ -93,7 +103,7 @@ public class LyricGenerator : MonoBehaviour {
                         spawnIndex--;
                 }
                 if (currSymbolIndex < reader.mySymbolList.symbol.Length) {
-                    nextSymbolArrival = reader.mySymbolList.symbol[currSymbolIndex].time;
+                    nextSymbolArrival = reader.mySymbolList.symbol[currSymbolIndex].time - 3f;
                     nextSymbol = char.ToLower(reader.mySymbolList.symbol[currSymbolIndex].symbol[0]);
                 }
             }

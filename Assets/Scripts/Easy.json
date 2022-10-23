@@ -1,0 +1,589 @@
+{
+  "symbol": [
+    {
+      "time": 6.2,
+      "symbol": ">"
+    },
+    {
+      "time": 8.5,
+      "symbol": "t"
+    },
+    {
+      "time": 11.5,
+      "symbol": "i"
+    },
+    {
+      "time": 12,
+      "symbol": "e"
+    },
+    {
+      "time": 13.5,
+      "symbol": "c"
+    },
+    {
+      "time": 14,
+      "symbol": "2"
+    },
+    {
+      "time": 14.5,
+      "symbol": "2"
+    },
+    {
+      "time": 15.2,
+      "symbol": "4"
+    },
+    {
+      "time": 16.3,
+      "symbol": "i"
+    },
+    {
+      "time": 18.9,
+      "symbol": "a"
+
+    },
+    {
+      "time": 21.5,
+      "symbol": "s"
+    },
+    {
+      "time": 24.3,
+      "symbol": "a"
+    },
+    {
+      "time": 26.7,
+      "symbol": "a"
+    },
+    {
+      "time": 27,
+      "symbol": "b"
+    },
+    {
+      "time": 27.3,
+      "symbol": "c"
+    },
+    {
+      "time": 29.2,
+      "symbol": "1"
+    },
+    {
+      "time": 29.5,
+      "symbol": "2"
+    },
+    {
+      "time": 29.9,
+      "symbol": "3"
+    },
+    {
+      "time": 31.7,
+      "symbol": "d"
+    },
+    {
+      "time": 32.1,
+      "symbol": "r"
+    },
+    {
+      "time": 32.4,
+      "symbol": "m"
+    },
+    {
+      "time": 33.1,
+      "symbol": "a"
+    },
+    {
+      "time": 33.6,
+      "symbol": "b"
+    },
+    {
+      "time": 33.8,
+      "symbol": "c"
+    },
+    {
+      "time": 34.2,
+      "symbol": "1"
+    },
+    {
+      "time": 34.6,
+      "symbol": "2"
+    },
+    {
+      "time": 34.9,
+      "symbol": "3"
+    },
+    {
+      "time": 35.8,
+      "symbol": ">"
+    },
+    {
+      "time": 36.2,
+      "symbol": "<"
+    },
+    {
+      "time": 36.9,
+      "symbol": "a"
+    },
+    {
+      "time": 37.3,
+      "symbol": "b"
+    },
+    {
+      "time": 37.7,
+      "symbol": "c"
+    },
+    {
+      "time": 39.2,
+      "symbol": "1"
+    },
+    {
+      "time": 39.7,
+      "symbol": "2"
+    },
+    {
+      "time": 40,
+      "symbol": "3"
+    },
+    {
+      "time": 41.9,
+      "symbol": "d"
+    },
+    {
+      "time": 42.2,
+      "symbol": "r"
+    },
+    {
+      "time": 42.5,
+      "symbol": "m"
+    },
+    {
+      "time": 43,
+      "symbol": "a"
+    },
+    {
+      "time": 43.4,
+      "symbol": "b"
+    },
+    {
+      "time": 43.8,
+      "symbol": "c"
+    },
+    {
+      "time": 44.3,
+      "symbol": "1"
+    },
+    {
+      "time": 44.8,
+      "symbol": "2"
+    },
+    {
+      "time": 45,
+      "symbol": "3"
+    },
+    {
+      "time": 45.7,
+      "symbol": ">"
+    },
+    {
+      "time": 46.3,
+      "symbol": "<"
+    },
+    {
+      "time": 47.3,
+      "symbol": "l"
+    },
+    {
+      "time": 50.8,
+      "symbol": "l"
+    },
+    {
+      "time": 53.2,
+      "symbol": "s"
+    },
+    {
+      "time": 54.3,
+      "symbol": "c"
+    },
+    {
+      "time": 55.2,
+      "symbol": "l"
+    },
+    {
+      "time": 56.8,
+      "symbol": "r"
+    },
+    {
+      "time": 57.8,
+      "symbol": "w"
+    },
+    {
+      "time": 58.9,
+      "symbol": "a"
+    },
+    {
+      "time": 61.7,
+      "symbol": "w"
+    },
+    {
+      "time": 64.4,
+      "symbol": "y"
+    },
+    {
+      "time": 66,
+      "symbol": "t"
+    },
+    {
+      "time": 66.4,
+      "symbol": "t"
+    },
+    {
+      "time": 66.7,
+      "symbol": "t"
+    },
+    {
+      "time": 67.1,
+      "symbol": "t"
+    },
+    {
+      "time": 69.6,
+      "symbol": "h"
+    },
+    {
+      "time": 70.3,
+      "symbol": "a"
+    },
+    {
+      "time": 74.8,
+      "symbol": "l"
+    },
+    {
+      "time": 77.2,
+      "symbol": "a"
+    },
+    {
+      "time": 77.6,
+      "symbol": "b"
+    },
+    {
+      "time": 78,
+      "symbol": "c"
+    },
+    {
+      "time": 79.8,
+      "symbol": "1"
+    },
+    {
+      "time": 80.2,
+      "symbol": "2"
+    },
+    {
+      "time": 80.6,
+      "symbol": "3"
+    },
+    {
+      "time": 82.2,
+      "symbol": "d"
+    },
+    {
+      "time": 82.6,
+      "symbol": "r"
+    },
+    {
+      "time": 82.9,
+      "symbol": "m"
+    },
+    {
+      "time": 83.7,
+      "symbol": "a"
+    },
+    {
+      "time": 84,
+      "symbol": "b"
+    },
+    {
+      "time": 84.3,
+      "symbol": "c"
+    },
+    {
+      "time": 84.9,
+      "symbol": "1"
+    },
+    {
+      "time": 85.3,
+      "symbol": "2"
+    },
+    {
+      "time": 85.6,
+      "symbol": "3"
+    },
+    {
+      "time": 86.2,
+      "symbol": ">"
+    },
+    {
+      "time": 86.8,
+      "symbol": "<"
+    },
+    {
+      "time": 87.5,
+      "symbol": "a"
+    },
+    {
+      "time": 87.9,
+      "symbol": "b"
+    },
+    {
+      "time": 88.3,
+      "symbol": "c"
+    },
+    {
+      "time": 90.1,
+      "symbol": "c"
+    },
+    {
+      "time": 91.4,
+      "symbol": "3"
+    },
+    {
+      "time": 92,
+      "symbol": "s"
+    },
+    {
+      "time": 95.2,
+      "symbol": "t"
+    },
+    {
+      "time": 96.6,
+      "symbol": "l"
+    },
+    {
+      "time": 98.1,
+      "symbol": "t"
+    },
+    {
+      "time": 99.2,
+      "symbol": "l"
+    },
+    {
+      "time": 100.5,
+      "symbol": "s"
+    },
+    {
+      "time": 103,
+      "symbol": "1"
+    },
+    {
+      "time": 103.4,
+      "symbol": "2"
+    },
+    {
+      "time": 103.7,
+      "symbol": "3"
+    },
+    {
+      "time": 104.4,
+      "symbol": ">"
+    },
+    {
+      "time": 105,
+      "symbol": "<"
+    },
+    {
+      "time": 110.9,
+      "symbol": "s"
+    },
+    {
+      "time": 113.4,
+      "symbol": "i"
+    },
+    {
+      "time": 115.9,
+      "symbol": "n"
+    },
+    {
+      "time": 116.9,
+      "symbol": "g"
+    },
+    {
+      "time": 118.5,
+      "symbol": "s"
+    },
+    {
+      "time": 120.3,
+      "symbol": "s"
+    },
+    {
+      "time": 122.6,
+      "symbol": "s"
+    },
+    {
+      "time": 125.2,
+      "symbol": "s"
+    },
+    {
+      "time": 127.5,
+      "symbol": "1"
+    },
+    {
+      "time": 127.9,
+      "symbol": "2"
+    },
+    {
+      "time": 128.3,
+      "symbol": "3"
+    },
+    {
+      "time": 130,
+      "symbol": "a"
+    },
+    {
+      "time": 130.4,
+      "symbol": "b"
+    },
+    {
+      "time": 130.7,
+      "symbol": "c"
+    },
+    {
+      "time": 132.5,
+      "symbol": "d"
+    },
+    {
+      "time": 132.9,
+      "symbol": "r"
+    },
+    {
+      "time": 133.3,
+      "symbol": "m"
+    },
+    {
+      "time": 135.1,
+      "symbol": "t"
+    },
+    {
+      "time": 136.5,
+      "symbol": "l"
+    },
+    {
+      "time": 137.9,
+      "symbol": "a"
+    },
+    {
+      "time": 138.4,
+      "symbol": "b"
+    },
+    {
+      "time": 138.7,
+      "symbol": "c"
+    },
+    {
+      "time": 140.1,
+      "symbol": "c"
+    },
+    {
+      "time": 141.5,
+      "symbol": "3"
+    },
+    {
+      "time": 142.1,
+      "symbol": "s"
+    },
+    {
+      "time": 145,
+      "symbol": "t"
+    },
+    {
+      "time": 146.4,
+      "symbol": "l"
+    },
+    {
+      "time": 148.8,
+      "symbol": "s"
+    },
+    {
+      "time": 149.8,
+      "symbol": "c"
+    },
+    {
+      "time": 151.5,
+      "symbol": "l"
+    },
+    {
+      "time": 152.3,
+      "symbol": "a"
+    },
+    {
+      "time": 152.6,
+      "symbol": "b"
+    },
+    {
+      "time": 153,
+      "symbol": "c"
+    },
+    {
+      "time": 154.4,
+      "symbol": "c"
+    },
+    {
+      "time": 156,
+      "symbol": "3"
+    },
+    {
+      "time": 156.6,
+      "symbol": "s"
+    },
+    {
+      "time": 159.8,
+      "symbol": "t"
+    },
+    {
+      "time": 161.1,
+      "symbol": "l"
+    },
+    {
+      "time": 163.5,
+      "symbol": "s"
+    },
+    {
+      "time": 164.1,
+      "symbol": "s"
+    },
+    {
+      "time": 165.1,
+      "symbol": "s"
+    },
+    {
+      "time": 165.8,
+      "symbol": "s"
+    },
+    {
+      "time": 167.2,
+      "symbol": "a"
+    },
+    {
+      "time": 167.6,
+      "symbol": "b"
+    },
+    {
+      "time": 167.9,
+      "symbol": "c"
+    },
+    {
+      "time": 169.5,
+      "symbol": "c"
+    },
+    {
+      "time": 171,
+      "symbol": "3"
+    },
+    {
+      "time": 172.2,
+      "symbol": "s"
+    },
+    {
+      "time": 174.6,
+      "symbol": "t"
+    },
+    {
+      "time": 176,
+      "symbol": "l"
+    }
+  ]
+}
