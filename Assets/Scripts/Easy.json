@@ -2,7 +2,7 @@
   "symbol": [
     {
       "time": 6.2,
-      "symbol": ">"
+      "symbol": "7"
     },
     {
       "time": 8.5,
@@ -111,11 +111,11 @@
     },
     {
       "time": 35.8,
-      "symbol": ">"
+      "symbol": "7"
     },
     {
       "time": 36.2,
-      "symbol": "<"
+      "symbol": "6"
     },
     {
       "time": 36.9,
@@ -179,11 +179,11 @@
     },
     {
       "time": 45.7,
-      "symbol": ">"
+      "symbol": "7"
     },
     {
       "time": 46.3,
-      "symbol": "<"
+      "symbol": "6"
     },
     {
       "time": 47.3,
@@ -315,11 +315,11 @@
     },
     {
       "time": 86.2,
-      "symbol": ">"
+      "symbol": "7"
     },
     {
       "time": 86.8,
-      "symbol": "<"
+      "symbol": "6"
     },
     {
       "time": 87.5,
@@ -379,11 +379,11 @@
     },
     {
       "time": 104.4,
-      "symbol": ">"
+      "symbol": "7"
     },
     {
       "time": 105,
-      "symbol": "<"
+      "symbol": "6"
     },
     {
       "time": 110.9,

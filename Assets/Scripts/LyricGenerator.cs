@@ -20,6 +20,9 @@ public class LyricGenerator : MonoBehaviour {
     private bool isForwards;
     private const float endpointY = -4.5f;
 
+    /* The error message prefab to display onto the screen */
+    [SerializeField] private GameObject errorMessage;
+
     /* The images of each letter or number in sign language */
     [SerializeField] private Sprite[] alphabet;
     /* A mapping from character to the corresponding image that goes with it */
@@ -58,9 +61,9 @@ public class LyricGenerator : MonoBehaviour {
                 charToSprite.Add((char)('1' + (i - 26)), alphabet[i]);
             else {
                 if (i == 31)
-                    charToSprite.Add('<', alphabet[i]);
+                    charToSprite.Add('6', alphabet[i]);
                 else if (i == 32)
-                    charToSprite.Add('>', alphabet[i]);
+                    charToSprite.Add('7', alphabet[i]);
             }
         }
 
@@ -147,16 +150,21 @@ public class LyricGenerator : MonoBehaviour {
     /// <param name="letter"></param> character that we are removing from the screen
     public void RemoveLyric(char letter) {
         symbolsTerminated++;
-
         GameObject popLetter = letterToOrder[letter].Dequeue();
         /* Check if bottom edge passes top of taskbar (valid), center passes top of taskbar (invalid) */
         float bottomEdge = popLetter.transform.position.y - (popLetter.GetComponent<Symbol>().GetHeight() / 2);
-        if (bottomEdge <= endpointY && popLetter.transform.position.y >= endpointY)
+        if (bottomEdge <= endpointY && popLetter.transform.position.y >= endpointY) {
             totalCorrect++;
+            popLetter.GetComponent<Animator>().enabled = true;
+            popLetter.GetComponent<Animator>().SetTrigger("Correct");
+        } else {
+            errorMessage.SetActive(true);
+            errorMessage.GetComponent<Animator>().SetTrigger("SwipeIn");
+            DestroyImmediate(popLetter, true);
+        }
 
         textfield.text = ((int)(((float)totalCorrect / symbolsTerminated) * 100)).ToString() + "%";
             
-        DestroyImmediate(popLetter, true);
         if (letterToOrder[letter].Count <= 0)
             letterToOrder.Remove(letter);
     }
