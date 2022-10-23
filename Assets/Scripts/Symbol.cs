@@ -20,11 +20,19 @@ public class Symbol : MonoBehaviour {
         }
     }
 
-    public void setLetter(char letter) {
+    public void SetLetter(char letter) {
         this.letter = letter;
     }
 
-    public void setSprite(Sprite sprite) {
+    public void SetSprite(Sprite sprite) {
         gameObject.GetComponent<SpriteRenderer>().sprite = sprite;
+    }
+
+    public float GetWidth() {
+        return gameObject.GetComponent<SpriteRenderer>().bounds.size.x;
+    }
+
+    public float GetHeight() {
+        return gameObject.GetComponent<SpriteRenderer>().bounds.size.y;
     }
 }

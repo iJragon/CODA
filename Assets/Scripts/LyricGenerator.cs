@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
+using Unity.VisualScripting;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public class LyricGenerator : MonoBehaviour {
@@ -11,6 +14,11 @@ public class LyricGenerator : MonoBehaviour {
     /* The symbol object that is instantiated */
     private GameObject symbolInstant;
     private Symbol symbol;
+    /* The four possible spawn locations */
+    [SerializeField] private Transform[] spawnLocations;
+    private int spawnIndex;
+    private bool isForwards;
+    private const float endpointY = -4.5f;
 
     /* The images of each letter or number in sign language */
     [SerializeField] private Sprite[] alphabet;
@@ -27,6 +35,11 @@ public class LyricGenerator : MonoBehaviour {
     private float nextSymbolArrival;
     private char nextSymbol;
 
+    /* Mapping accuracy text */
+    [SerializeField] private TextMeshProUGUI textfield;
+    private int totalCorrect;
+    private int symbolsTerminated; 
+
     private void Awake() {
         if (instance == null)
             instance = this;
@@ -38,15 +51,20 @@ public class LyricGenerator : MonoBehaviour {
         reader = gameObject.GetComponent<JSONReader>();
 
         /* Map the alphanumeric to its corresponding image */
-        for (int i = 0; i < alphabet.Length; i++) {
+        for (int i = 0; i < alphabet.Length; i++)
             charToSprite.Add((char)('a' + i), alphabet[i]);
-        }
 
         /* Start with the first symbol */
         currTimer = 0f;
         currSymbolIndex = 0;
+        spawnIndex = currSymbolIndex;
+        isForwards = true;
         nextSymbolArrival = reader.mySymbolList.symbol[currSymbolIndex].time;
         nextSymbol = char.ToLower(reader.mySymbolList.symbol[currSymbolIndex].symbol[0]);
+
+        /* Reset accuracy to 100% */
+        textfield.text = "0%";
+        symbolsTerminated = 0;
     }
 
     private void Update() {
@@ -55,9 +73,25 @@ public class LyricGenerator : MonoBehaviour {
         if (currSymbolIndex < reader.mySymbolList.symbol.Length) {
             currTimer += Time.deltaTime;
             if (currTimer >= nextSymbolArrival) {
-                Debug.Log("This symbol arrived at the " + currTimer + " second time frame.");
                 GenerateLyric(nextSymbol);
                 currSymbolIndex++;
+                /* If we're going forward, check if we've reached the right end
+                 * If we're going backward, check if we've reached the left end
+                 * If we haven't reached either end, keep iterating in the current direction
+                 */
+                if (isForwards) {
+                    if (spawnIndex >= spawnLocations.Length - 1) {
+                        spawnIndex--;
+                        isForwards = false;
+                    } else
+                        spawnIndex++;
+                } else {
+                    if (spawnIndex <= 0) {
+                        spawnIndex++;
+                        isForwards = true;
+                    } else
+                        spawnIndex--;
+                }
                 if (currSymbolIndex < reader.mySymbolList.symbol.Length) {
                     nextSymbolArrival = reader.mySymbolList.symbol[currSymbolIndex].time;
                     nextSymbol = char.ToLower(reader.mySymbolList.symbol[currSymbolIndex].symbol[0]);
@@ -69,9 +103,8 @@ public class LyricGenerator : MonoBehaviour {
         foreach (KeyCode vKey in System.Enum.GetValues(typeof(KeyCode))) {
             if (Input.GetKeyDown(vKey)) {
                 char letter = char.ToLower((char)vKey);
-                if (letterToOrder.ContainsKey(letter)) {
+                if (letterToOrder.ContainsKey(letter))
                     RemoveLyric(letter);
-                }
             }
         }
     }
@@ -81,22 +114,21 @@ public class LyricGenerator : MonoBehaviour {
     /// </summary>
     /// <param name="letter"></param> character that we are displaying to the screen
     private void GenerateLyric(char letter) {
-        /* Spawn the symbol at the top of the screen */
-        symbolInstant = Instantiate(symbolPrefab);
+        /* Spawn the symbol at the top of the screen */ 
+        symbolInstant = Instantiate(symbolPrefab, spawnLocations[spawnIndex].position, Quaternion.identity);
         /* Load the symbol with the corresponding character and sprite features */
         symbol = symbolInstant.GetComponent<Symbol>();
         if (symbol == null)
             return;
-        symbol.setLetter(letter);
-        symbol.setSprite(charToSprite[letter]);
+        symbol.SetLetter(letter);
+        symbol.SetSprite(charToSprite[letter]);
         /* Symbol gets added to dictionary for what's currently on screen, according to its letter */
         if (!letterToOrder.ContainsKey(letter)) {
             Queue<GameObject> occurrences = new Queue<GameObject>();
             occurrences.Enqueue(symbolInstant);
             letterToOrder.Add(letter, occurrences);
-        } else {
+        } else
             letterToOrder[letter].Enqueue(symbolInstant);
-        }
     }
 
     /// <summary>
@@ -104,7 +136,17 @@ public class LyricGenerator : MonoBehaviour {
     /// </summary>
     /// <param name="letter"></param> character that we are removing from the screen
     public void RemoveLyric(char letter) {
-        DestroyImmediate(letterToOrder[letter].Dequeue(), true);
+        symbolsTerminated++;
+
+        GameObject popLetter = letterToOrder[letter].Dequeue();
+        /* Check if bottom edge passes top of taskbar (valid), center passes top of taskbar (invalid) */
+        float bottomEdge = popLetter.transform.position.y - (popLetter.GetComponent<Symbol>().GetHeight() / 2);
+        if (bottomEdge <= endpointY && popLetter.transform.position.y >= endpointY)
+            totalCorrect++;
+
+        textfield.text = ((int)(((float)totalCorrect / symbolsTerminated) * 100)).ToString() + "%";
+            
+        DestroyImmediate(popLetter, true);
         if (letterToOrder[letter].Count <= 0)
             letterToOrder.Remove(letter);
     }
