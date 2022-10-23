@@ -5,7 +5,8 @@ import time
 import numpy as np
 import copy
 import itertools
-from annotation_test import gt_A, gt_B, gt_C, gt_1, gt_2, gt_3
+from keyboardEmulator import keyboardEmulate
+from annotation_test import gt_A, gt_B, gt_C, gt_L, gt_1, gt_2, gt_3
 
 # different analysis modes
 class Mode(Enum):
@@ -23,7 +24,8 @@ path = "./realistic.jpg"
 if (m==Mode.WEBCAM_INT):
     cap = cv2.VideoCapture(0)
 elif (m==Mode.WEBCAM_EX):
-    cap = cv2.VideoCapture(-1)
+    cap = cv2.VideoCapture(2)
+    # cap = cvCreateCameraCapture( -1 )
     if (cap.isOpened() == False):
         print("external camera failed, defaulting to built-in")
         cap = cv2.VideoCapture(0)
@@ -72,30 +74,6 @@ def pre_process_landmark(landmark_list):
     temp_landmark_list = list(map(normalize_, temp_landmark_list))
 
     return temp_landmark_list
-
-L_test = np.array([[ 0.,          0.        ],
-[ 0.16814159, -0.07079646],
-[ 0.32743363, -0.25663717],
-[ 0.46902655, -0.38938053],
-[ 0.59292035, -0.45132743],
-[ 0.12389381, -0.50442478],
-[ 0.13274336, -0.73451327],
-[ 0.11504425, -0.87610619],
-[ 0.09734513, -1.        ],
-[-0.00884956,-0.48672566],
-[ 0.03539823, -0.57522124],
-[ 0.07079646, -0.38053097],
-[ 0.07079646, -0.27433628],
-[-0.13274336, -0.43362832],
-[-0.05309735, -0.47787611],
-[ 0.,         -0.30088496],
-[ 0.,         -0.21238938],
-[-0.23893805, -0.36283186],
-[-0.15044248, -0.38938053],
-[-0.07964602, -0.26548673],
-[-0.07079646, -0.20353982]
-])
-
 
 # init media pipe
 mpHands = mp.solutions.hands
@@ -153,25 +131,27 @@ while True:
 
     # print(nplmlivepre)
 
-    # diff = L_test - nplmlivepre
-    # diff = gt_C() - nplmlivepre
-    diff = gt_3() - nplmlivepre
-    diff2 = gt_B() - nplmlivepre
+    diff = gt_A() - nplmlivepre
+    diff2 = gt_1() - nplmlivepre
 
     norm = np.linalg.norm(diff, axis=0)
     norm2 = np.linalg.norm(diff2, axis=0)
     total_dist1 = np.sum(norm)
     total_dist2 = np.sum(norm2)
 
-    if(total_dist1 < total_dist2):
-        print("3")
+    print("d1", total_dist1)
+    print("d2", total_dist2)
+
+    if(total_dist1 > 3 or total_dist2 > 3 or np.isnan(total_dist1) or np.isnan(total_dist2)):
+        print("please move into frame!")
+    elif(total_dist1 < total_dist2):
+        print("A")
+        keyboardEmulate('A')
+        # time.sleep(0.5)
     else:
-        print("B")
-
-    # print(norm.shape)
-    # print(norm)
-    # print("total_dist",total_dist)
-
+        print("1")
+        keyboardEmulate('1')
+        # time.sleep(0.5)
 
     # Press Q on keyboard to stop recording
     if cv2.waitKey(1) & 0xFF == ord('q'):
