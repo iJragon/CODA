@@ -16,6 +16,7 @@ public class StartGame : MonoBehaviour {
     [SerializeField] private GameObject taskbarUnglow;
     [SerializeField] private GameObject instructions;
     [SerializeField] private GameObject title;
+    [SerializeField] private GameObject windowsFade;
 
     private float fadeInFactor = 0.5f;
     private bool isFading;
@@ -26,6 +27,7 @@ public class StartGame : MonoBehaviour {
         game_Video.GetComponent<VideoPlayer>().targetCameraAlpha = 0f;
         lyricGenerator.enabled = false;
         start_Wallpaper.SetActive(true);
+        windowsFade.SetActive(true);
     }
 
     private void Update() {
@@ -38,6 +40,10 @@ public class StartGame : MonoBehaviour {
                 taskbarUnglow.SetActive(false);
                 isFading = false;
             }
+        }
+
+        if (Input.GetMouseButtonDown(0)) {
+            AudioManager.instance.Play("ButtonClick");
         }
     }
 

@@ -145,8 +145,8 @@ while True:
     if(total_dist1 > 3 or total_dist2 > 3 or np.isnan(total_dist1) or np.isnan(total_dist2)):
         print("please move into frame!")
     elif(total_dist1 < total_dist2):
-        print("A")
-        keyboardEmulate('A')
+        print("a")
+        keyboardEmulate('a')
         # time.sleep(0.5)
     else:
         print("1")

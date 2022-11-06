@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Symbol : MonoBehaviour {
-    private const float bottomY = -5.5f;
+    private const float bottomY = -5.4f;
     private const float hardSpeed = 9.5f;
     private const float easySpeed = 3.17f;
     private char letter;

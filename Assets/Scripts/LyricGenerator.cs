@@ -18,7 +18,7 @@ public class LyricGenerator : MonoBehaviour {
     [SerializeField] private Transform[] spawnLocations;
     private int spawnIndex;
     private bool isForwards;
-    private const float endpointY = -4.5f;
+    private const float endpointY = -4.2f;
 
     /* The error message prefab to display onto the screen */
     [SerializeField] private GameObject errorMessage;
@@ -153,13 +153,15 @@ public class LyricGenerator : MonoBehaviour {
         GameObject popLetter = letterToOrder[letter].Dequeue();
         /* Check if bottom edge passes top of taskbar (valid), center passes top of taskbar (invalid) */
         float bottomEdge = popLetter.transform.position.y - (popLetter.GetComponent<Symbol>().GetHeight() / 2);
-        if (bottomEdge <= endpointY && popLetter.transform.position.y >= endpointY) {
+        float topEdge = popLetter.transform.position.y + (popLetter.GetComponent<Symbol>().GetHeight() / 2);
+        if (bottomEdge <= endpointY && topEdge >= endpointY) {
             totalCorrect++;
             popLetter.GetComponent<Animator>().enabled = true;
             popLetter.GetComponent<Animator>().SetTrigger("Correct");
         } else {
             errorMessage.SetActive(true);
             errorMessage.GetComponent<Animator>().SetTrigger("SwipeIn");
+            AudioManager.instance.Play("ErrorSound");
             DestroyImmediate(popLetter, true);
         }
 
