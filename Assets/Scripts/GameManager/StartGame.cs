@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,8 +25,8 @@ public class StartGame : MonoBehaviour {
     private LyricGenerator lyricGenerator;
     private void Start() {
         lyricGenerator = gameObject.GetComponent<LyricGenerator>();
+        lyricGenerator.enabled = false;
         game_Video.GetComponent<VideoPlayer>().targetCameraAlpha = 0f;
-        game_Video.GetComponent<VideoPlayer>().clip = SongManager.instance.currentSong.video;
         lyricGenerator.enabled = false;
         start_Wallpaper.SetActive(true);
         windowsFade.SetActive(true);
@@ -49,6 +50,9 @@ public class StartGame : MonoBehaviour {
     }
 
     public void ShowCODA_App() {
+        lyricGenerator.enabled = true;
+        game_Video.GetComponent<VideoPlayer>().clip = SongManager.instance.songs[SongManager.instance.currentSongIdx].videoClip;
+
         start_Wallpaper.SetActive(false);
         CODA_Icon.SetActive(false);
         CODA_App.SetActive(true);
@@ -72,5 +76,17 @@ public class StartGame : MonoBehaviour {
         game_Video.SetActive(false);
         accuracy_Text.SetActive(false);
         lyricGenerator.enabled = false;
+    }
+
+    public void PauseGame() {
+        Time.timeScale = 0f;
+        AudioListener.pause = true;
+        game_Video.GetComponent<VideoPlayer>().Pause();
+    }
+
+    public void ResumeGame() {
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
+        game_Video.GetComponent<VideoPlayer>().Play();
     }
 }

@@ -11,6 +11,7 @@ public class SongCreator : ScriptableObject
     public string singer;
     public float offset;
     public float speed;
-    public VideoClip video;
+    public string difficulty;
+    public VideoClip videoClip;
     public TextAsset songData;
 }

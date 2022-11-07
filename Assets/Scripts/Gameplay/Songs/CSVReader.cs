@@ -1,6 +1,8 @@
 using UnityEngine;
 
 public class CSVReader : MonoBehaviour {
+    public static CSVReader instance;
+
     public TextAsset textAssetData;
 
     [System.Serializable]
@@ -17,11 +19,17 @@ public class CSVReader : MonoBehaviour {
     public SymbolDataList mySymbolList = new SymbolDataList();
 
     private void Awake() {
-        textAssetData = SongManager.instance.currentSong.songData;
-        ReadCSV();
+        if (instance == null)
+            instance = this;
+        else {
+            Destroy(gameObject);
+            return;
+        }
     }
 
-    private void ReadCSV() {
+    public void ReadCSV() {
+        textAssetData = SongManager.instance.songs[SongManager.instance.currentSongIdx].songData;
+
         string[] data = textAssetData.text.Split(new string[] { ",", "\n" }, System.StringSplitOptions.None);
 
         int tableSize = data.Length / 2 - 1;

@@ -72,7 +72,7 @@ public class LyricGenerator : MonoBehaviour {
         currSymbolIndex = 0;
         spawnIndex = currSymbolIndex;
         isForwards = true;
-        nextSymbolArrival = reader.mySymbolList.symbols[currSymbolIndex].timeStamp - SongManager.instance.currentSong.offset;
+        nextSymbolArrival = reader.mySymbolList.symbols[currSymbolIndex].timeStamp - SongManager.instance.songs[SongManager.instance.currentSongIdx].offset;
         nextSymbol = char.ToLower(reader.mySymbolList.symbols[currSymbolIndex].sign[0]);
 
         /* Reset accuracy to 100% */
@@ -106,7 +106,7 @@ public class LyricGenerator : MonoBehaviour {
                         spawnIndex--;
                 }
                 if (currSymbolIndex < reader.mySymbolList.symbols.Length) {
-                    nextSymbolArrival = reader.mySymbolList.symbols[currSymbolIndex].timeStamp - SongManager.instance.currentSong.offset;
+                    nextSymbolArrival = reader.mySymbolList.symbols[currSymbolIndex].timeStamp - SongManager.instance.songs[SongManager.instance.currentSongIdx].offset;
                     nextSymbol = char.ToLower(reader.mySymbolList.symbols[currSymbolIndex].sign[0]);
                 }
             }

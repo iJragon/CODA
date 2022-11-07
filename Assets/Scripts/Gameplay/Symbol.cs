@@ -12,7 +12,7 @@ public class Symbol : MonoBehaviour {
 
     private void Update() {
         /* Move down on the screen at a constant pace */
-        gameObject.transform.Translate(new Vector3(0, -SongManager.instance.currentSong.speed * Time.deltaTime, 0));
+        gameObject.transform.Translate(new Vector3(0, -SongManager.instance.songs[SongManager.instance.currentSongIdx].speed * Time.deltaTime, 0));
         /* Remove the symbol and decrease the player's accuracy if it reaches the bottom */
         if (gameObject.transform.position.y < bottomY) {
             LyricGenerator.instance.RemoveLyric(letter);
