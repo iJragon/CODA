@@ -2221,7 +2221,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1048831039}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: 14192bfadccbdb045854cc7c5c6dbc65, type: 3}
+  m_VideoClip: {fileID: 32900000, guid: c879fb5787119784b92a72796c3fbcaa, type: 3}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 519420031}
@@ -3316,6 +3316,7 @@ GameObject:
   - component: {fileID: 1245548321}
   - component: {fileID: 1245548322}
   - component: {fileID: 1245548323}
+  - component: {fileID: 1245548324}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -3443,6 +3444,19 @@ MonoBehaviour:
   textAssetData: {fileID: 4900000, guid: 3d7ffc399a9c6ee44a89e9f95fd1fa03, type: 3}
   mySymbolList:
     symbols: []
+--- !u!114 &1245548324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1245548317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cca85fb5becb6054ab6e02e0f3e07f76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentSong: {fileID: 11400000, guid: 7744609349c33524da48756bfdff7af2, type: 2}
 --- !u!1 &1405502787
 GameObject:
   m_ObjectHideFlags: 0

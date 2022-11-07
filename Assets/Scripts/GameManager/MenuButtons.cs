@@ -9,10 +9,10 @@ public class MenuButtons : MonoBehaviour {
     public void SetColor(string status) {
         switch (status) {
             case "enter":
-                element.color = new Color32(239, 53, 203, 255);
+                element.color = new Color32(93, 81, 255, 255);
                 break;
             case "down":
-                element.color = new Color32(93, 81, 255, 255);
+                element.color = new Color32(161, 161, 211, 255);
                 break;
             case "exit":
                 element.color = new Color32(1, 1, 1, 0);

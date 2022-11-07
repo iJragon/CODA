@@ -25,6 +25,7 @@ public class StartGame : MonoBehaviour {
     private void Start() {
         lyricGenerator = gameObject.GetComponent<LyricGenerator>();
         game_Video.GetComponent<VideoPlayer>().targetCameraAlpha = 0f;
+        game_Video.GetComponent<VideoPlayer>().clip = SongManager.instance.currentSong.video;
         lyricGenerator.enabled = false;
         start_Wallpaper.SetActive(true);
         windowsFade.SetActive(true);

@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Symbol : MonoBehaviour {
     private const float bottomY = -5.4f;
-    private const float hardSpeed = 9.5f;
-    private const float easySpeed = 3.17f;
     private char letter;
 
     public Symbol(char letter) {
@@ -14,7 +12,7 @@ public class Symbol : MonoBehaviour {
 
     private void Update() {
         /* Move down on the screen at a constant pace */
-        gameObject.transform.Translate(new Vector3(0, -easySpeed * Time.deltaTime, 0));
+        gameObject.transform.Translate(new Vector3(0, -SongManager.instance.currentSong.speed * Time.deltaTime, 0));
         /* Remove the symbol and decrease the player's accuracy if it reaches the bottom */
         if (gameObject.transform.position.y < bottomY) {
             LyricGenerator.instance.RemoveLyric(letter);

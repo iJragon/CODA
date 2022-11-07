@@ -17,6 +17,7 @@ public class CSVReader : MonoBehaviour {
     public SymbolDataList mySymbolList = new SymbolDataList();
 
     private void Awake() {
+        textAssetData = SongManager.instance.currentSong.songData;
         ReadCSV();
     }
 
