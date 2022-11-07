@@ -33,7 +33,7 @@ public class LyricGenerator : MonoBehaviour {
 
     /* Timings for when the symbols actually show up on the screen */
     private float currTimer;
-    private JSONReader reader;
+    private CSVReader reader;
     private int currSymbolIndex;
     private float nextSymbolArrival;
     private char nextSymbol;
@@ -51,7 +51,7 @@ public class LyricGenerator : MonoBehaviour {
     private void Start() {
         letterToOrder = new Dictionary<char, Queue<GameObject>>();
         charToSprite = new Dictionary<char, Sprite>();
-        reader = gameObject.GetComponent<JSONReader>();
+        reader = gameObject.GetComponent<CSVReader>();
 
         /* Map the alphanumeric to its corresponding image */
         for (int i = 0; i < alphabet.Length; i++) {
@@ -72,8 +72,8 @@ public class LyricGenerator : MonoBehaviour {
         currSymbolIndex = 0;
         spawnIndex = currSymbolIndex;
         isForwards = true;
-        nextSymbolArrival = reader.mySymbolList.symbol[currSymbolIndex].time - 3f;
-        nextSymbol = char.ToLower(reader.mySymbolList.symbol[currSymbolIndex].symbol[0]);
+        nextSymbolArrival = reader.mySymbolList.symbols[currSymbolIndex].timeStamp - 3f;
+        nextSymbol = char.ToLower(reader.mySymbolList.symbols[currSymbolIndex].sign[0]);
 
         /* Reset accuracy to 100% */
         textfield.text = "0%";
@@ -83,7 +83,7 @@ public class LyricGenerator : MonoBehaviour {
     private void Update() {
         /* Once timer (that runs from the beginning of game) passes the next symbol's arrival time, generate the lyric */
         /* After decoding and executing the lyric, proceed to fetching the next lyric */
-        if (currSymbolIndex < reader.mySymbolList.symbol.Length) {
+        if (currSymbolIndex < reader.mySymbolList.symbols.Length) {
             currTimer += Time.deltaTime;
             if (currTimer >= nextSymbolArrival) {
                 GenerateLyric(nextSymbol);
@@ -105,9 +105,9 @@ public class LyricGenerator : MonoBehaviour {
                     } else
                         spawnIndex--;
                 }
-                if (currSymbolIndex < reader.mySymbolList.symbol.Length) {
-                    nextSymbolArrival = reader.mySymbolList.symbol[currSymbolIndex].time - 3f;
-                    nextSymbol = char.ToLower(reader.mySymbolList.symbol[currSymbolIndex].symbol[0]);
+                if (currSymbolIndex < reader.mySymbolList.symbols.Length) {
+                    nextSymbolArrival = reader.mySymbolList.symbols[currSymbolIndex].timeStamp - 3f;
+                    nextSymbol = char.ToLower(reader.mySymbolList.symbols[currSymbolIndex].sign[0]);
                 }
             }
         }
