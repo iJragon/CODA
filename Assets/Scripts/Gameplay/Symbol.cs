@@ -5,14 +5,19 @@ using UnityEngine;
 public class Symbol : MonoBehaviour {
     private const float bottomY = -5.4f;
     private char letter;
+    public static float speed;
 
     public Symbol(char letter) {
         this.letter = letter;
     }
 
+    private void Start() {
+        UpdateSpeed();
+    }
+
     private void Update() {
         /* Move down on the screen at a constant pace */
-        gameObject.transform.Translate(new Vector3(0, -SongManager.instance.songs[SongManager.instance.currentSongIdx].speed * Time.deltaTime, 0));
+        gameObject.transform.Translate(new Vector3(0, -speed * Time.deltaTime, 0));
         /* Remove the symbol and decrease the player's accuracy if it reaches the bottom */
         if (gameObject.transform.position.y < bottomY) {
             LyricGenerator.instance.RemoveLyric(letter);
@@ -34,5 +39,9 @@ public class Symbol : MonoBehaviour {
 
     public float GetHeight() {
         return gameObject.GetComponent<SpriteRenderer>().bounds.size.y;
+    }
+
+    public static void UpdateSpeed() {
+        speed = SongManager.instance.songs[SongManager.instance.currentSongIdx].speed;
     }
 }

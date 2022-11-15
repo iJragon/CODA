@@ -170,4 +170,14 @@ public class LyricGenerator : MonoBehaviour {
         if (letterToOrder[letter].Count <= 0)
             letterToOrder.Remove(letter);
     }
+
+    public void ResetStats() {
+        Start();
+
+        foreach (char letter in letterToOrder.Keys) {
+            foreach (GameObject symbol in letterToOrder[letter]) {
+                DestroyImmediate(symbol);
+            }
+        }
+    }
 }

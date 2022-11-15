@@ -9,6 +9,7 @@ public class SongManager : MonoBehaviour {
 
     public SongCreator[] songs; 
     public int currentSongIdx;
+    public int pausedSongSelectionIdx;
 
     [SerializeField] private Image cover;
     [SerializeField] private TextMeshProUGUI title;
@@ -19,36 +20,31 @@ public class SongManager : MonoBehaviour {
     private void Awake() {
         if (instance == null)
             instance = this;
-        else {
-            Destroy(gameObject);
-            return;
-        }
     }
 
     private void Start() {
         currentSongIdx = 0;
-        UpdateDescription();
+        pausedSongSelectionIdx = currentSongIdx;
     }
 
     public void NextSong() {
-        currentSongIdx = (currentSongIdx + 1) % songs.Length;
+        pausedSongSelectionIdx = (pausedSongSelectionIdx + 1) % songs.Length;
         UpdateDescription();
     }
 
     public void PreviousSong() {
-        currentSongIdx = (currentSongIdx - 1) % songs.Length;
-        if (currentSongIdx < 0)
-            currentSongIdx = songs.Length - 1;
+        pausedSongSelectionIdx = (pausedSongSelectionIdx - 1) % songs.Length;
+        if (pausedSongSelectionIdx < 0)
+            pausedSongSelectionIdx = songs.Length - 1;
         UpdateDescription();
     }
 
     private void UpdateDescription() {
-        cover.sprite = songs[currentSongIdx].cover;
-        title.text = songs[currentSongIdx].title; 
-        singers.text = songs[currentSongIdx].singer;
-        difficulty.text = songs[currentSongIdx].difficulty;
-        length.text = CalculateLength(songs[currentSongIdx].videoClip.length);
-        CSVReader.instance.ReadCSV();
+        cover.sprite = songs[pausedSongSelectionIdx].cover;
+        title.text = songs[pausedSongSelectionIdx].title; 
+        singers.text = songs[pausedSongSelectionIdx].singer;
+        difficulty.text = songs[pausedSongSelectionIdx].difficulty;
+        length.text = CalculateLength(songs[pausedSongSelectionIdx].videoClip.length);
     }
 
     private string CalculateLength(double timeInSeconds) {
