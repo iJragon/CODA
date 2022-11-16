@@ -6,6 +6,7 @@ public class Symbol : MonoBehaviour {
     private const float bottomY = -5.4f;
     private char letter;
     public static float speed;
+    public bool isDestroyed;
 
     public Symbol(char letter) {
         this.letter = letter;
@@ -19,7 +20,7 @@ public class Symbol : MonoBehaviour {
         /* Move down on the screen at a constant pace */
         gameObject.transform.Translate(new Vector3(0, -speed * Time.deltaTime, 0));
         /* Remove the symbol and decrease the player's accuracy if it reaches the bottom */
-        if (gameObject.transform.position.y < bottomY) {
+        if (!isDestroyed && gameObject.transform.position.y < bottomY) {
             LyricGenerator.instance.RemoveLyric(letter);
         }
     }

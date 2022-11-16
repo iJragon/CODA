@@ -76,6 +76,7 @@ public class LyricGenerator : MonoBehaviour {
         nextSymbol = char.ToLower(reader.mySymbolList.symbols[currSymbolIndex].sign[0]);
 
         /* Reset accuracy to 100% */
+        totalCorrect = 0;
         textfield.text = "0%";
         symbolsTerminated = 0;
     }
@@ -158,10 +159,12 @@ public class LyricGenerator : MonoBehaviour {
             totalCorrect++;
             popLetter.GetComponent<Animator>().enabled = true;
             popLetter.GetComponent<Animator>().SetTrigger("Correct");
+            popLetter.GetComponent<Symbol>().isDestroyed = true;
         } else {
             errorMessage.SetActive(true);
             errorMessage.GetComponent<Animator>().SetTrigger("SwipeIn");
             AudioManager.instance.Play("ErrorSound");
+            popLetter.GetComponent<Symbol>().isDestroyed = true;
             DestroyImmediate(popLetter, true);
         }
 
@@ -175,9 +178,11 @@ public class LyricGenerator : MonoBehaviour {
         Start();
 
         foreach (char letter in letterToOrder.Keys) {
-            foreach (GameObject symbol in letterToOrder[letter]) {
-                DestroyImmediate(symbol);
+            while (letterToOrder[letter].Count > 0) {
+                GameObject popLetter = letterToOrder[letter].Dequeue();
+                DestroyImmediate(popLetter, true);
             }
+            letterToOrder.Remove(letter);
         }
     }
 }
