@@ -183,6 +183,7 @@ public class GameManager : MonoBehaviour {
     /// <returns></returns>
     public IEnumerator ChangeSong() {
         FadeIn();
+        StartCoroutine(SoundManager.instance.FadeOutVideoVolume(3.5f));
         lyricGenerator.enabled = false;
         yield return new WaitForSeconds(3.5f);
         lyricGenerator.enabled = true;
