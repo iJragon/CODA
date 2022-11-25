@@ -7,10 +7,11 @@ using UnityEngine.UI;
 public class SongManager : MonoBehaviour {
     public static SongManager instance;
 
-    public SongCreator[] songs; 
-    public int currentSongIdx;
-    public int pausedSongSelectionIdx;
+    public SongCreator[] songs;             // Songs we have on our playlist 
+    public int currentSongIdx;              // Current song that is playing
+    public int pausedSongSelectionIdx;      // Current selection of the song while we're changing the song (paused menu)
 
+    /* Song details */
     [SerializeField] private Image cover;
     [SerializeField] private TextMeshProUGUI title;
     [SerializeField] private TextMeshProUGUI singers;
@@ -23,15 +24,22 @@ public class SongManager : MonoBehaviour {
     }
 
     private void Start() {
+        /* Default to the first song on the playlist */
         currentSongIdx = 0;
         pausedSongSelectionIdx = currentSongIdx;
     }
 
+    /// <summary>
+    /// /* Go forward and wrap back to the beginning if we're at the end */
+    /// </summary>
     public void NextSong() {
         pausedSongSelectionIdx = (pausedSongSelectionIdx + 1) % songs.Length;
         UpdateDescription();
     }
 
+    /// <summary>
+    /// /* Go backward and wrap to the end if we're at the beginning */
+    /// </summary>
     public void PreviousSong() {
         pausedSongSelectionIdx = (pausedSongSelectionIdx - 1) % songs.Length;
         if (pausedSongSelectionIdx < 0)
@@ -39,6 +47,9 @@ public class SongManager : MonoBehaviour {
         UpdateDescription();
     }
 
+    /// <summary>
+    /// Update the menu with the correctly selected song's details
+    /// </summary>
     private void UpdateDescription() {
         cover.sprite = songs[pausedSongSelectionIdx].cover;
         title.text = songs[pausedSongSelectionIdx].title; 
@@ -47,6 +58,11 @@ public class SongManager : MonoBehaviour {
         length.text = CalculateLength(songs[pausedSongSelectionIdx].videoClip.length);
     }
 
+    /// <summary>
+    /// Format the length of the song into minutes and seconds
+    /// </summary>
+    /// <param name="timeInSeconds"></param> length of the song in seconds total
+    /// <returns></returns>
     private string CalculateLength(double timeInSeconds) {
         int minutes = (int) (timeInSeconds / 60F);
         int seconds = (int) (timeInSeconds - minutes * 60);

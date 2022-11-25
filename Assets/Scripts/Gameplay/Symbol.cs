@@ -3,14 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Symbol : MonoBehaviour {
-    private const float bottomY = -5.4f;
+    private const float bottomY = -5.4f;    // Bottom of the screen where it should despawn
+    public static float speed;              // Speed at which it moves down on the screen 
     private char letter;
-    public static float speed;
-    public bool isDestroyed;
-
-    public Symbol(char letter) {
-        this.letter = letter;
-    }
+    public bool isDestroyed;                // Make sure it's only destroyed once (player might hit the letter at the last moment)
 
     private void Start() {
         UpdateSpeed();
@@ -20,9 +16,8 @@ public class Symbol : MonoBehaviour {
         /* Move down on the screen at a constant pace */
         gameObject.transform.Translate(new Vector3(0, -speed * Time.deltaTime, 0));
         /* Remove the symbol and decrease the player's accuracy if it reaches the bottom */
-        if (!isDestroyed && gameObject.transform.position.y < bottomY) {
+        if (!isDestroyed && gameObject.transform.position.y < bottomY)
             LyricGenerator.instance.RemoveLyric(letter);
-        }
     }
 
     public void SetLetter(char letter) {
@@ -42,6 +37,9 @@ public class Symbol : MonoBehaviour {
         return gameObject.GetComponent<SpriteRenderer>().bounds.size.y;
     }
 
+    /// <summary>
+    /// This function is called whenever the song is changed and we need to update the speed for all symbols
+    /// </summary>
     public static void UpdateSpeed() {
         speed = SongManager.instance.songs[SongManager.instance.currentSongIdx].speed;
     }

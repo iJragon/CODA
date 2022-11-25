@@ -1,47 +1,33 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public class LyricGenerator : MonoBehaviour {
     public static LyricGenerator instance; 
 
-    /* The symbol prefab that we are displaying to the screen */
-    [SerializeField] private GameObject symbolPrefab;
-    /* The symbol object that is instantiated */
-    private GameObject symbolInstant;
-    private Symbol symbol;
-    /* The four possible spawn locations */
-    [SerializeField] private Transform[] spawnLocations;
-    private int spawnIndex;
-    private bool isForwards;
-    private const float endpointY = -4.2f;
+    [SerializeField] private GameObject symbolPrefab;           // Symbol prefab that we are displaying to the 
+    private GameObject symbolInstant;                           // Symbol object that is instantiated
+    private Symbol symbol;                                      
+    [SerializeField] private Transform[] spawnLocations;        // Possible spawn locations
+    private int spawnIndex;                                     // Particular spawn index for some symbol
+    private bool isForwards;                                    // Whether we're spawning them in forward or backward direction
+    private const float endpointY = -4.2f;                      // Exact level where player can knock out the symbol
 
-    /* The error message prefab to display onto the screen */
-    [SerializeField] private GameObject errorMessage;
+    [SerializeField] private GameObject errorMessage;           // Error message prefab to display onto the screen
+    [SerializeField] private Sprite[] alphabet;                 // Images of each letter or number in sign language
+    private Dictionary<char, Sprite> charToSprite;              // Map character to the corresponding image that goes with it
 
-    /* The images of each letter or number in sign language */
-    [SerializeField] private Sprite[] alphabet;
-    /* A mapping from character to the corresponding image that goes with it */
-    private Dictionary<char, Sprite> charToSprite;
+    private Dictionary<char, Queue<GameObject>> letterToOrder;  // Map characters to order appearing on screen in y-ascending order
 
-    /* A mapping from characters to the order in which they appear on the screen in y-ascending order */
-    private Dictionary<char, Queue<GameObject>> letterToOrder;
+    private float currTimer;                                    // Timings for when the symbols actually show up on the screen
+    private CSVReader reader;                                   // Read in the data for the current song 
+    private int currSymbolIndex;                                // Current index of the symbol into CSV of current song 
+    private float nextSymbolArrival;                            // When the next symbol should arrive (timed to hit the endpointY)
+    private char nextSymbol;                                    // Next letter/word we have to hit
 
-    /* Timings for when the symbols actually show up on the screen */
-    private float currTimer;
-    private CSVReader reader;
-    private int currSymbolIndex;
-    private float nextSymbolArrival;
-    private char nextSymbol;
-
-    /* Mapping accuracy text */
-    [SerializeField] private TextMeshProUGUI textfield;
-    private int totalCorrect;
-    private int symbolsTerminated; 
+    [SerializeField] private TextMeshProUGUI textfield;         // Field where score gets written into
+    private int totalCorrect;                                   // How many symbols player knocked out on the beat
+    private int symbolsTerminated;                              // How many total symbols either got knocked out on beat or despawned
 
     private void Awake() {
         if (instance == null)
@@ -174,6 +160,9 @@ public class LyricGenerator : MonoBehaviour {
             letterToOrder.Remove(letter);
     }
 
+    /// <summary>
+    /// Called when the song has changed and we need to remove all of the symbols currently on the screen and reset fields
+    /// </summary>
     public void ResetStats() {
         Start();
 

@@ -10,6 +10,7 @@ public class SoundManager : MonoBehaviour {
     void ChangeVolume() => AudioListener.volume = volumeSlider.value;
 
     private void Awake() {
+        /* Update volume of game and slider depending on previously saved volume */
         AudioListener.volume = PlayerPrefs.GetFloat("volume");
         volumeSlider.onValueChanged.AddListener(delegate { ChangeVolume(); });
         volumeSlider.value = AudioListener.volume;

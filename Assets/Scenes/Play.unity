@@ -2438,8 +2438,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1245548321}
-        m_TargetAssemblyTypeName: StartGame, Assembly-CSharp
-        m_MethodName: ShowCODA_App
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: OnClickCODA_App
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
