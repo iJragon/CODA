@@ -1,57 +1,57 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 
 public class LyricGenerator : MonoBehaviour {
     public static LyricGenerator instance; 
 
-    [SerializeField] private GameObject symbolPrefab;           // Symbol prefab that we are displaying to the 
-    private GameObject symbolInstant;                           // Symbol object that is instantiated
-    private Symbol symbol;                                      
-    [SerializeField] private Transform[] spawnLocations;        // Possible spawn locations
-    private int spawnIndex;                                     // Particular spawn index for some symbol
-    private bool isForwards;                                    // Whether we're spawning them in forward or backward direction
-    private const float endpointY = -4.2f;                      // Exact level where player can knock out the symbol
+    [SerializeField] private GameObject symbolPrefab;               // Symbol prefab that we are displaying to the 
+    private GameObject symbolInstant;                               // Symbol object that is instantiated
+    private Symbol symbol;                                          
+    [SerializeField] private Transform[] spawnLocations;            // Possible spawn locations
+    private int spawnIndex;                                         // Particular spawn index for some symbol
+    private bool isForwards;                                        // Whether we're spawning them in forward or backward direction
+    private const float endpointY = -4.2f;                          // Exact level where player can knock out the symbol
 
-    [SerializeField] private GameObject errorMessage;           // Error message prefab to display onto the screen
-    [SerializeField] private Sprite[] alphabet;                 // Images of each letter or number in sign language
-    private Dictionary<char, Sprite> charToSprite;              // Map character to the corresponding image that goes with it
+    [SerializeField] private GameObject errorMessage;               // Error message prefab to display onto the screen
 
-    private Dictionary<char, Queue<GameObject>> letterToOrder;  // Map characters to order appearing on screen in y-ascending order
+    private Dictionary<string, Queue<GameObject>> signScreenOrder;    // Map characters to order appearing on screen in y-ascending order
 
-    private float currTimer;                                    // Timings for when the symbols actually show up on the screen
-    private CSVReader reader;                                   // Read in the data for the current song 
-    private int currSymbolIndex;                                // Current index of the symbol into CSV of current song 
-    private float nextSymbolArrival;                            // When the next symbol should arrive (timed to hit the endpointY)
-    private char nextSymbol;                                    // Next letter/word we have to hit
+    private float currTimer;                                        // Timings for when the symbols actually show up on the screen
+    private CSVReader reader;                                       // Read in the data for the current song 
+    private int currSymbolIndex;                                    // Current index of the symbol into CSV of current song 
+    private float nextSymbolArrival;                                // When the next symbol should arrive (timed to hit the endpointY)
+    private string nextSymbol;                                      // Next letter/word we have to hit
 
-    [SerializeField] private TextMeshProUGUI textfield;         // Field where score gets written into
-    private int totalCorrect;                                   // How many symbols player knocked out on the beat
-    private int symbolsTerminated;                              // How many total symbols either got knocked out on beat or despawned
+    [SerializeField] private TextMeshProUGUI textfield;             // Field where score gets written into
+    private int totalCorrect;                                       // How many symbols player knocked out on the beat
+    private int symbolsTerminated;                                  // How many total symbols either got knocked out on beat or despawned
+
+    private string currSign;                                        // Current sign player is doing - number, letter, or word
+    private Dictionary<string, Sprite> signToSprites;               // Dictionary of signs (numbers, letters, words) to their respective sprites
+
+    [Serializable]
+    public struct signToSprite {                                    // A fake dictionary to show up on the inspector
+        public string sign;
+        public Sprite sprite;
+    };
+    public signToSprite[] ssDict;    
 
     private void Awake() {
         if (instance == null)
             instance = this;
+
+        /* Initialize each <key, value> of the dictionary depending on our fake dictionary on the inspector */
+        signToSprites = new Dictionary<string, Sprite>();
+        foreach (var s2s in ssDict)
+            signToSprites[s2s.sign] = s2s.sprite;
     }
 
     private void Start() {
-        letterToOrder = new Dictionary<char, Queue<GameObject>>();
-        charToSprite = new Dictionary<char, Sprite>();
+        signScreenOrder = new Dictionary<string, Queue<GameObject>>();
         reader = gameObject.GetComponent<CSVReader>();
-
-        /* Map the alphanumeric to its corresponding image */
-        for (int i = 0; i < alphabet.Length; i++) {
-            if (i <= 25)
-                charToSprite.Add((char)('a' + i), alphabet[i]);
-            else if (i <= 30)
-                charToSprite.Add((char)('1' + (i - 26)), alphabet[i]);
-            else {
-                if (i == 31)
-                    charToSprite.Add('6', alphabet[i]);
-                else if (i == 32)
-                    charToSprite.Add('7', alphabet[i]);
-            }
-        }
 
         /* Start with the first symbol */
         currTimer = 0f;
@@ -59,7 +59,8 @@ public class LyricGenerator : MonoBehaviour {
         spawnIndex = currSymbolIndex;
         isForwards = true;
         nextSymbolArrival = reader.mySymbolList.symbols[currSymbolIndex].timeStamp - SongManager.instance.songs[SongManager.instance.currentSongIdx].offset;
-        nextSymbol = char.ToLower(reader.mySymbolList.symbols[currSymbolIndex].sign[0]);
+        nextSymbol = reader.mySymbolList.symbols[currSymbolIndex].sign.ToLower();
+        nextSymbol = nextSymbol.Substring(0, nextSymbol.Length - 1);
 
         /* Reset accuracy to 100% */
         totalCorrect = 0;
@@ -94,18 +95,36 @@ public class LyricGenerator : MonoBehaviour {
                 }
                 if (currSymbolIndex < reader.mySymbolList.symbols.Length) {
                     nextSymbolArrival = reader.mySymbolList.symbols[currSymbolIndex].timeStamp - SongManager.instance.songs[SongManager.instance.currentSongIdx].offset;
-                    nextSymbol = char.ToLower(reader.mySymbolList.symbols[currSymbolIndex].sign[0]);
+                    nextSymbol = reader.mySymbolList.symbols[currSymbolIndex].sign.ToLower();
+                    nextSymbol = nextSymbol.Substring(0, nextSymbol.Length - 1);
                 }
             }
         }
 
-        /* If player hits a key and that key is on the screen, then remove that symbol off the screen */
+        /* Reset if player is about to sign a new word */
+        if (Input.GetKeyDown(KeyCode.Space))
+            currSign = "";
+
+        /* Keep track of all the keys the player is hitting */
         foreach (KeyCode vKey in System.Enum.GetValues(typeof(KeyCode))) {
-            if (Input.GetKeyDown(vKey)) {
-                char letter = char.ToLower((char)vKey);
-                if (letterToOrder.ContainsKey(letter))
-                    RemoveLyric(letter);
+            if (Input.GetKeyDown(vKey) && vKey != KeyCode.Space) {
+                // If the player is currently holding spacebar, then append each letter to the currSign, denoting it's a word, not a letter
+                // Otherwise, treat the key as a single alphanumeric character
+                if (Input.GetKey(KeyCode.Space)) {
+                    currSign += vKey;
+                } else {
+                    currSign = ((char) vKey).ToString().ToLower();
+                    if (signScreenOrder.ContainsKey(currSign))
+                        RemoveLyric(currSign);
+                }
             }
+        }
+
+        /* Once player releases space, the word is complete. Now check if the word is one of the ones appearing on the screen */
+        if (Input.GetKeyUp(KeyCode.Space)) {
+            currSign = currSign.ToLower();
+            if (signScreenOrder.ContainsKey(currSign))
+                RemoveLyric(currSign);
         }
     }
 
@@ -113,31 +132,31 @@ public class LyricGenerator : MonoBehaviour {
     /// Generates a new alphanumeric character with the respective character and sprite features and displays it onto screen
     /// </summary>
     /// <param name="letter"></param> character that we are displaying to the screen
-    private void GenerateLyric(char letter) {
+    private void GenerateLyric(string sign) {
         /* Spawn the symbol at the top of the screen */ 
         symbolInstant = Instantiate(symbolPrefab, spawnLocations[spawnIndex].position, Quaternion.identity);
         /* Load the symbol with the corresponding character and sprite features */
         symbol = symbolInstant.GetComponent<Symbol>();
         if (symbol == null)
             return;
-        symbol.SetLetter(letter);
-        symbol.SetSprite(charToSprite[letter]);
+        symbol.SetSign(sign);
+        symbol.SetSprite(signToSprites[sign]);
         /* Symbol gets added to dictionary for what's currently on screen, according to its letter */
-        if (!letterToOrder.ContainsKey(letter)) {
+        if (!signScreenOrder.ContainsKey(sign)) {
             Queue<GameObject> occurrences = new Queue<GameObject>();
             occurrences.Enqueue(symbolInstant);
-            letterToOrder.Add(letter, occurrences);
+            signScreenOrder.Add(sign, occurrences);
         } else
-            letterToOrder[letter].Enqueue(symbolInstant);
+            signScreenOrder[sign].Enqueue(symbolInstant);
     }
 
     /// <summary>
     /// Removes the lowest symbol on the screen
     /// </summary>
     /// <param name="letter"></param> character that we are removing from the screen
-    public void RemoveLyric(char letter) {
+    public void RemoveLyric(string sign) {
         symbolsTerminated++;
-        GameObject popLetter = letterToOrder[letter].Dequeue();
+        GameObject popLetter = signScreenOrder[sign].Dequeue();
         /* Check if bottom edge passes top of taskbar (valid), center passes top of taskbar (invalid) */
         float bottomEdge = popLetter.transform.position.y - (popLetter.GetComponent<Symbol>().GetHeight() / 2);
         float topEdge = popLetter.transform.position.y + (popLetter.GetComponent<Symbol>().GetHeight() / 2);
@@ -156,8 +175,8 @@ public class LyricGenerator : MonoBehaviour {
 
         textfield.text = ((int)(((float)totalCorrect / symbolsTerminated) * 100)).ToString() + "%";
             
-        if (letterToOrder[letter].Count <= 0)
-            letterToOrder.Remove(letter);
+        if (signScreenOrder[sign].Count <= 0)
+            signScreenOrder.Remove(sign);
     }
 
     /// <summary>
@@ -166,12 +185,12 @@ public class LyricGenerator : MonoBehaviour {
     public void ResetStats() {
         Start();
 
-        foreach (char letter in letterToOrder.Keys) {
-            while (letterToOrder[letter].Count > 0) {
-                GameObject popLetter = letterToOrder[letter].Dequeue();
+        foreach (string sign in signScreenOrder.Keys) {
+            while (signScreenOrder[sign].Count > 0) {
+                GameObject popLetter = signScreenOrder[sign].Dequeue();
                 DestroyImmediate(popLetter, true);
             }
-            letterToOrder.Remove(letter);
+            signScreenOrder.Remove(sign);
         }
     }
 }

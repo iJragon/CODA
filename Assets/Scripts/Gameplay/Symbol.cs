@@ -5,7 +5,7 @@ using UnityEngine;
 public class Symbol : MonoBehaviour {
     private const float bottomY = -5.4f;    // Bottom of the screen where it should despawn
     public static float speed;              // Speed at which it moves down on the screen 
-    private char letter;
+    private string sign;
     public bool isDestroyed;                // Make sure it's only destroyed once (player might hit the letter at the last moment)
 
     private void Start() {
@@ -17,11 +17,11 @@ public class Symbol : MonoBehaviour {
         gameObject.transform.Translate(new Vector3(0, -speed * Time.deltaTime, 0));
         /* Remove the symbol and decrease the player's accuracy if it reaches the bottom */
         if (!isDestroyed && gameObject.transform.position.y < bottomY)
-            LyricGenerator.instance.RemoveLyric(letter);
+            LyricGenerator.instance.RemoveLyric(sign);
     }
 
-    public void SetLetter(char letter) {
-        this.letter = letter;
+    public void SetSign(string sign) {
+        this.sign = sign;
     }
 
     public void SetSprite(Sprite sprite) {
