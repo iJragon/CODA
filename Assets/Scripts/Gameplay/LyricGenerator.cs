@@ -16,8 +16,10 @@ public class LyricGenerator : MonoBehaviour {
     private const float endpointY = -4.2f;                          // Exact level where player can knock out the symbol
 
     [SerializeField] private GameObject errorMessage;               // Error message prefab to display onto the screen
+    public Queue<GameObject> errorMessages;                         // Pool of error messages to allow reusability
+    private int currSortingOrder;                                   // Ensure each newly-spawning error message is layered on top of previous
 
-    private Dictionary<string, Queue<GameObject>> signScreenOrder;    // Map characters to order appearing on screen in y-ascending order
+    private Dictionary<string, Queue<GameObject>> signScreenOrder;  // Map characters to order appearing on screen in y-ascending order
 
     private float currTimer;                                        // Timings for when the symbols actually show up on the screen
     private CSVReader reader;                                       // Read in the data for the current song 
@@ -37,7 +39,8 @@ public class LyricGenerator : MonoBehaviour {
         public string sign;
         public Sprite sprite;
     };
-    public signToSprite[] ssDict;    
+    public signToSprite[] ssDict;
+
 
     private void Awake() {
         if (instance == null)
@@ -52,6 +55,8 @@ public class LyricGenerator : MonoBehaviour {
     private void Start() {
         signScreenOrder = new Dictionary<string, Queue<GameObject>>();
         reader = gameObject.GetComponent<CSVReader>();
+        errorMessages = new Queue<GameObject>();
+        currSortingOrder = 0;
 
         /* Start with the first symbol */
         currTimer = 0f;
@@ -166,8 +171,15 @@ public class LyricGenerator : MonoBehaviour {
             popLetter.GetComponent<Animator>().SetTrigger("Correct");
             popLetter.GetComponent<Symbol>().isDestroyed = true;
         } else {
-            errorMessage.SetActive(true);
-            errorMessage.GetComponent<Animator>().SetTrigger("SwipeIn");
+            // If there are error messages ready in our messages pool (idle), then reuse them
+            // Otherwise, if all messages are currently busy and there's nothing reusable in our pool, then create a new one
+            if (errorMessages.Count > 0) {
+                GameObject currentMsg = errorMessages.Dequeue();
+                currentMsg.GetComponent<Animator>().SetTrigger("SwipeIn");
+                currentMsg.GetComponent<SpriteRenderer>().sortingOrder = ++currSortingOrder;
+            } else
+                Instantiate(errorMessage).GetComponent<SpriteRenderer>().sortingOrder = ++currSortingOrder;
+
             AudioManager.instance.Play("ErrorSound");
             popLetter.GetComponent<Symbol>().isDestroyed = true;
             DestroyImmediate(popLetter, true);
