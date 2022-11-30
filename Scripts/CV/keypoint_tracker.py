@@ -1,38 +1,18 @@
 import cv2
 import mediapipe as mp
-from enum import Enum
 import time
 import numpy as np
 import copy
 import itertools
-from keyboardEmulator import keyboardEmulate
-from annotation_test import gt_A, gt_B, gt_C, gt_L, gt_1, gt_2, gt_3
-
-# different analysis modes
-class Mode(Enum):
-  WEBCAM_INT = 0
-  WEBCAM_EX = 1
-  RECORDING = 2
-  PICTURE = 3
+from util.keyboard import keyboardEmulate
+from util.camera import Mode
+from util.camera import get_capture_device
+from single_annotation_test import gt_A, gt_B, gt_C, gt_L, gt_1, gt_2, gt_3
 
 # initializations
-m = Mode.WEBCAM_EX
-cap = None
+m = Mode.WEBCAM_INT
+cap = get_capture_device(Mode.WEBCAM_INT)
 path = "./realistic.jpg"
-
-# Create a VideoCapture object
-if (m==Mode.WEBCAM_INT):
-    cap = cv2.VideoCapture(0)
-elif (m==Mode.WEBCAM_EX):
-    cap = cv2.VideoCapture(2)
-    # cap = cvCreateCameraCapture( -1 )
-    if (cap.isOpened() == False):
-        print("external camera failed, defaulting to built-in")
-        cap = cv2.VideoCapture(0)
-elif (m==Mode.RECORDING):
-    cap = cv2.VideoCapture(path)
-else:
-    cap = cv2.imread(path)
 
 def calc_landmark_list(image, landmarks):
     image_width, image_height = image.shape[1], image.shape[0]
@@ -97,7 +77,7 @@ while True:
     # print(results.multi_hand_landmarks)
  
     if results.multi_hand_landmarks:
-        # print(results.multi_hand_landmarks)
+        # print(results.multi_hand_lanAAAAAdmarks)
         for handLms in results.multi_hand_landmarks:
             lmlive = calc_landmark_list(img, handLms)
             # print(type(lmlive))
@@ -115,14 +95,6 @@ while True:
     cTime = time.time()
     fps = 1 / (cTime - pTime)
     pTime = cTime
- 
-    cv2.putText(img, str(int(fps)), (10, 70), cv2.FONT_HERSHEY_PLAIN, 3,
-                (255, 0, 255), 3)
- 
-    cv2.imshow("Image", img)
-    if iteration == 0:
-        cv2.imwrite("./out/annotations/single_test.png", img)
-        iteration += 1
 
     nplmlive = np.array(lmlive)
     sh = nplmlive.shape
@@ -131,7 +103,7 @@ while True:
 
     # print(nplmlivepre)
 
-    diff = gt_A() - nplmlivepre
+    diff = gt_C() - nplmlivepre
     diff2 = gt_1() - nplmlivepre
 
     norm = np.linalg.norm(diff, axis=0)
@@ -142,16 +114,28 @@ while True:
     print("d1", total_dist1)
     print("d2", total_dist2)
 
+
+    output = ""
     if(total_dist1 > 3 or total_dist2 > 3 or np.isnan(total_dist1) or np.isnan(total_dist2)):
         print("please move into frame!")
     elif(total_dist1 < total_dist2):
-        print("A")
-        keyboardEmulate('A')
+        output = "C"
+        print(output)
+        keyboardEmulate(output, hold_space=False)
         # time.sleep(0.5)
     else:
-        print("1")
-        keyboardEmulate('1')
+        output = 1
+        print(str(output))
+        keyboardEmulate(str(output))
         # time.sleep(0.5)
+
+    cv2.putText(img, str(output), (10, 70), cv2.FONT_HERSHEY_PLAIN, 3,
+                (255, 0, 255), 3)
+ 
+    cv2.imshow("Image", img)
+    if iteration == 0:
+        cv2.imwrite("./out/annotations/single_test.png", img)
+        iteration += 1
 
     # Press Q on keyboard to stop recording
     if cv2.waitKey(1) & 0xFF == ord('q'):

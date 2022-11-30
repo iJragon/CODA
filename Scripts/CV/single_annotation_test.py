@@ -11,7 +11,7 @@ import numpy as np
 '''
 
 target = "3.png"
-path = "./out/ground-truth/" + target
+path = "./res/ground-truth/" + target
 img = cv2.imread(path)
 
 # init mediapipe
@@ -100,6 +100,13 @@ cv2.imwrite(write_path, img)
     Annotated Ground Truths for Comparison in keypoint_tracker.py
     These were generated, individually, using the code above
     Each one will return a ground-truth (gt) array for the corresponding symbol / expression
+'''
+
+'''
+    todo: determine a pipeline to export these models into a ground truth file and then compare with vision
+    could look at how it is done in the cv autograders or such
+
+    might also not be worth it since we have a trained set from the media pipe video, but not sure...
 '''
 
 def gt_A():

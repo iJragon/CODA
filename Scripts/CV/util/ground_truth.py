@@ -1,15 +1,15 @@
-from operator import le
-from re import L
-from turtle import width
 import cv2
 import numpy as np
-import time
 
+'''
+    ground truth slicing from reference image
+    only needs to be run once
+'''
 
 ground_truths_letters = {}
 ground_truths_numbers = {}
-path_letters = "./realistic.jpg"
-path_numbers = "./numbers.jpg"
+path_letters = "./res/docs/realistic.jpg"
+path_numbers = "./res/docs/numbers.jpg"
 
 # format (row, height, col, width) based on realistic.png
 ground_truths_letters["A"] = (50,150,70,110)
@@ -63,6 +63,11 @@ def ResizeWithAspectRatio(image, width=None, height=None, inter=cv2.INTER_AREA):
 
     return cv2.resize(image, dim, interpolation=inter), r
 
+im_raw_letters = cv2.imread(path_letters)
+im_raw_numbers = cv2.imread(path_numbers)
+letters_resize, resize_ratio = ResizeWithAspectRatio(im_raw_letters, width=1000)
+numbers_resize, resize_ratio = ResizeWithAspectRatio(im_raw_numbers, width=1000)
+
 # take in a tuple from the ground truth dict
 def GetLetterSubImage(src, dim):
     '''
@@ -75,40 +80,19 @@ def GetLetterSubImage(src, dim):
     width = dim[3]
     return src[row:row+height,col:col+width]
 
-im_raw_letters = cv2.imread(path_letters)
-im_raw_numbers = cv2.imread(path_numbers)
-letters_resize, resize_ratio = ResizeWithAspectRatio(im_raw_letters, width=1000)
-numbers_resize, resize_ratio = ResizeWithAspectRatio(im_raw_numbers, width=1000)
-
 '''
     slice and capture the pictures for each image
 '''
 for letter in ground_truths_letters.keys():
     print(letter)
     img = GetLetterSubImage(letters_resize, ground_truths_letters.get(letter))
-    path = "./out/ground-truth/" + str(letter) + ".png"
-    print(path)
+    path = "./res/ground-truth/" + str(letter) + ".png"
     cv2.imwrite(path, img)
 
 for num in ground_truths_numbers.keys():
     print(num)
     img = GetLetterSubImage(numbers_resize, ground_truths_numbers.get(num))
-    path = "./out/ground-truth/" + str(num) + ".png"
-    print(path)
+    path = "./res/ground-truth/" + str(num) + ".png"
     cv2.imwrite(path, img)
-
-
-'''
-while(1):
-    cv2.imshow("reference", resize)
-    # img = GetLetterSubImage(resize, ground_truths.get(letter))
-    cv2.imshow("full", resize)
-    # cv2.imshow("num", img)
-    time.sleep(0.25)
-
-    # Press Q on keyboard to stop recording
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-      break
-'''
 
 
