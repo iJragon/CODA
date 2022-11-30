@@ -7,7 +7,7 @@ import itertools
 from util.keyboard import keyboardEmulate
 from util.camera import Mode
 from util.camera import get_capture_device
-from Scripts.CV.util.single_annotation import gt
+from single_annotation import gt
 
 # initializations
 m = Mode.WEBCAM_INT
