@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour {
     public bool isPlaying;
 
     private LyricGenerator lyricGenerator;
+    private VideoPlayer videoPlayer;
 
     private void Awake() {
         if (instance = null)
@@ -37,6 +38,7 @@ public class GameManager : MonoBehaviour {
     private void Start() {
         /* Ensure gameplay stuff isn't enabled because we haven't started yet */
         lyricGenerator = gameObject.GetComponent<LyricGenerator>();
+        videoPlayer = game_Video.GetComponent<VideoPlayer>();
         lyricGenerator.enabled = false;
         game_Video.SetActive(false);
         isPlaying = false;
@@ -47,6 +49,9 @@ public class GameManager : MonoBehaviour {
 
         /* Read in the first song by default */
         CSVReader.instance.ReadCSV();
+
+        /* Initiate the process to see whether our video is done playing. When it is, invoke OnVideoFinished */
+        videoPlayer.loopPointReached += OnVideoFinished;
     }
 
     private void Update() {
@@ -69,7 +74,7 @@ public class GameManager : MonoBehaviour {
     public void StartupGame() {
         /* Turn video on and set the video to current song */
         game_Video.SetActive(true);
-        game_Video.GetComponent<VideoPlayer>().clip = SongManager.instance.songs[SongManager.instance.currentSongIdx].videoClip;
+        videoPlayer.clip = SongManager.instance.songs[SongManager.instance.currentSongIdx].videoClip;
 
         /* Activate the game visuals */
         CODA_App.SetActive(true);
@@ -113,7 +118,7 @@ public class GameManager : MonoBehaviour {
         Time.timeScale = 0f;
         AudioListener.pause = true;
         /* Pause the video as well */
-        game_Video.GetComponent<VideoPlayer>().Pause();
+        videoPlayer.Pause();
         /* Put up the invisible pause panel up so we can deselect the current pop-up and resume the game */
         pausePanel.SetActive(true);
     }
@@ -124,7 +129,7 @@ public class GameManager : MonoBehaviour {
         pausePanel.SetActive(false);
         /* If we've already been playing, then replay the video. Otherwise, on startup, there is no video to play */
         if (isPlaying)
-            game_Video.GetComponent<VideoPlayer>().Play();
+            videoPlayer.Play();
 
         /* If we changed the song while we were paused, update the current song and update the symbol details */
         if (SongManager.instance.currentSongIdx != SongManager.instance.pausedSongSelectionIdx) {
@@ -144,7 +149,7 @@ public class GameManager : MonoBehaviour {
     /// Called when the song has changed and we need to reset our accuracy stats and update the symbol speed according to song difficulty
     /// </summary>
     public void ResetGame() {
-        LyricGenerator.instance.ResetStats();
+        LyricGenerator.instance.ClearScreen();
         Symbol.UpdateSpeed();
     }
 
@@ -158,7 +163,7 @@ public class GameManager : MonoBehaviour {
 
         /* Game was paused when player selects restart song option, so resume the video */
         if (isPlaying)
-            game_Video.GetComponent<VideoPlayer>().Play();
+            videoPlayer.Play();
         StartCoroutine(ChangeSong());
     }
 
@@ -187,10 +192,24 @@ public class GameManager : MonoBehaviour {
         StartCoroutine(SoundManager.instance.FadeOutVideoVolume(3.5f));
         lyricGenerator.enabled = false;
         yield return new WaitForSeconds(3.5f);
-        lyricGenerator.enabled = true;
-        game_Video.GetComponent<VideoPlayer>().clip = null;
-        game_Video.GetComponent<VideoPlayer>().clip = SongManager.instance.songs[SongManager.instance.currentSongIdx].videoClip;
         ResetGame();
+        start_Wallpaper.SetActive(false);
+        videoPlayer.clip = null;
+        videoPlayer.clip = SongManager.instance.songs[SongManager.instance.currentSongIdx].videoClip;
+        lyricGenerator.enabled = true;
         FadeOut();
+    }
+
+    private void OnVideoFinished(UnityEngine.Video.VideoPlayer vp) {
+        StartCoroutine(SongComplete());
+    }
+
+    public IEnumerator SongComplete() {
+        FadeIn();
+        yield return new WaitForSeconds(2f);
+        windowsFade.GetComponent<Animator>().SetTrigger("fastFadeOut");
+        ResetGame();
+        Debug.Log("Display stats now.");
+        HideCODA_App(); 
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -19,13 +20,14 @@ public class LyricGenerator : MonoBehaviour {
     public Queue<GameObject> errorMessages;                         // Pool of error messages to allow reusability
     private int currSortingOrder;                                   // Ensure each newly-spawning error message is layered on top of previous
 
-    private Dictionary<string, Queue<GameObject>> signScreenOrder;  // Map characters to order appearing on screen in y-ascending order
+    private Queue<GameObject> signScreenOrder;                      // All symbols appearing on the screen in y-ascending order
 
     private float currTimer;                                        // Timings for when the symbols actually show up on the screen
     private CSVReader reader;                                       // Read in the data for the current song 
     private int currSymbolIndex;                                    // Current index of the symbol into CSV of current song 
     private float nextSymbolArrival;                                // When the next symbol should arrive (timed to hit the endpointY)
     private string nextSymbol;                                      // Next letter/word we have to hit
+    private bool isBeatable;                                        // The time at which player can perform a sign
 
     [SerializeField] private TextMeshProUGUI textfield;             // Field where score gets written into
     private int totalCorrect;                                       // How many symbols player knocked out on the beat
@@ -41,6 +43,7 @@ public class LyricGenerator : MonoBehaviour {
     };
     public signToSprite[] ssDict;
 
+    private bool isClearing;                                        // If we're clearing, don't generate any more symbols
 
     private void Awake() {
         if (instance == null)
@@ -50,14 +53,17 @@ public class LyricGenerator : MonoBehaviour {
         signToSprites = new Dictionary<string, Sprite>();
         foreach (var s2s in ssDict)
             signToSprites[s2s.sign] = s2s.sprite;
+
+        signScreenOrder = new Queue<GameObject>();
+        reader = gameObject.GetComponent<CSVReader>();
+        errorMessages = new Queue<GameObject>();
     }
 
     private void Start() {
-        signScreenOrder = new Dictionary<string, Queue<GameObject>>();
-        reader = gameObject.GetComponent<CSVReader>();
-        errorMessages = new Queue<GameObject>();
-        currSortingOrder = 0;
 
+    }
+
+    private void OnEnable() {
         /* Start with the first symbol */
         currTimer = 0f;
         currSymbolIndex = 0;
@@ -66,14 +72,21 @@ public class LyricGenerator : MonoBehaviour {
         nextSymbolArrival = reader.mySymbolList.symbols[currSymbolIndex].timeStamp - SongManager.instance.songs[SongManager.instance.currentSongIdx].offset;
         nextSymbol = reader.mySymbolList.symbols[currSymbolIndex].sign.ToLower();
         nextSymbol = nextSymbol.Substring(0, nextSymbol.Length - 1);
+        isClearing = false;
+        isBeatable = false;
 
         /* Reset accuracy to 100% */
         totalCorrect = 0;
         textfield.text = "0%";
         symbolsTerminated = 0;
+        currSortingOrder = 0;
     }
 
     private void Update() {
+        /* Don't do anything if we're in the middle of clearing */
+        if (isClearing)
+            return;
+
         /* Once timer (that runs from the beginning of game) passes the next symbol's arrival time, generate the lyric */
         /* After decoding and executing the lyric, proceed to fetching the next lyric */
         if (currSymbolIndex < reader.mySymbolList.symbols.Length) {
@@ -106,30 +119,36 @@ public class LyricGenerator : MonoBehaviour {
             }
         }
 
-        /* Reset if player is about to sign a new word */
-        if (Input.GetKeyDown(KeyCode.Space))
-            currSign = "";
+        if (signScreenOrder.Count > 0) {
+            GameObject firstSymbol = signScreenOrder.Peek();
+            /* Check if bottom edge passes top of taskbar (valid), center passes top of taskbar (invalid) */
+            float bottomEdge = firstSymbol.transform.position.y - (firstSymbol.GetComponent<Symbol>().GetHeight() / 2);
+            float topEdge = firstSymbol.transform.position.y + (firstSymbol.GetComponent<Symbol>().GetHeight() / 2);
+            if (bottomEdge <= endpointY && topEdge >= endpointY) {
+                /* Reset if player is about to sign a new word */
+                if (Input.GetKeyDown(KeyCode.Space))
+                    currSign = "";
 
-        /* Keep track of all the keys the player is hitting */
-        foreach (KeyCode vKey in System.Enum.GetValues(typeof(KeyCode))) {
-            if (Input.GetKeyDown(vKey) && vKey != KeyCode.Space) {
-                // If the player is currently holding spacebar, then append each letter to the currSign, denoting it's a word, not a letter
-                // Otherwise, treat the key as a single alphanumeric character
-                if (Input.GetKey(KeyCode.Space)) {
-                    currSign += vKey;
-                } else {
-                    currSign = ((char) vKey).ToString().ToLower();
-                    if (signScreenOrder.ContainsKey(currSign))
-                        RemoveLyric(currSign);
+                /* Keep track of all the keys the player is hitting */
+                foreach (KeyCode vKey in System.Enum.GetValues(typeof(KeyCode))) {
+                    if (Input.GetKeyDown(vKey) && vKey != KeyCode.Space) {
+                        // If the player is currently holding spacebar, then append each letter to the currSign, denoting it's a word, not a letter
+                        // Otherwise, treat the key as a single alphanumeric character
+                        if (Input.GetKey(KeyCode.Space)) {
+                            currSign += vKey;
+                        } else {
+                            currSign = ((char)vKey).ToString().ToLower();
+                            RemoveLyric(currSign);
+                        }
+                    }
+                }
+
+                /* Once player releases space, the word is complete. Now check if the word is one of the ones appearing on the screen */
+                if (Input.GetKeyUp(KeyCode.Space)) {
+                    currSign = currSign.ToLower();
+                    RemoveLyric(currSign);
                 }
             }
-        }
-
-        /* Once player releases space, the word is complete. Now check if the word is one of the ones appearing on the screen */
-        if (Input.GetKeyUp(KeyCode.Space)) {
-            currSign = currSign.ToLower();
-            if (signScreenOrder.ContainsKey(currSign))
-                RemoveLyric(currSign);
         }
     }
 
@@ -146,26 +165,21 @@ public class LyricGenerator : MonoBehaviour {
             return;
         symbol.SetSign(sign);
         symbol.SetSprite(signToSprites[sign]);
-        /* Symbol gets added to dictionary for what's currently on screen, according to its letter */
-        if (!signScreenOrder.ContainsKey(sign)) {
-            Queue<GameObject> occurrences = new Queue<GameObject>();
-            occurrences.Enqueue(symbolInstant);
-            signScreenOrder.Add(sign, occurrences);
-        } else
-            signScreenOrder[sign].Enqueue(symbolInstant);
+        signScreenOrder.Enqueue(symbolInstant);
     }
-
+    
     /// <summary>
     /// Removes the lowest symbol on the screen
     /// </summary>
     /// <param name="letter"></param> character that we are removing from the screen
     public void RemoveLyric(string sign) {
         symbolsTerminated++;
-        GameObject popLetter = signScreenOrder[sign].Dequeue();
-        /* Check if bottom edge passes top of taskbar (valid), center passes top of taskbar (invalid) */
-        float bottomEdge = popLetter.transform.position.y - (popLetter.GetComponent<Symbol>().GetHeight() / 2);
-        float topEdge = popLetter.transform.position.y + (popLetter.GetComponent<Symbol>().GetHeight() / 2);
-        if (bottomEdge <= endpointY && topEdge >= endpointY) {
+        /* Get the lowest symbol on the screen
+         * If the corresponding sign on the symbol matches with what the player signed, then give score
+         * Else pop up an error message
+         */
+        GameObject popLetter = signScreenOrder.Dequeue();
+        if (popLetter.GetComponent<Symbol>().GetSign().CompareTo(sign) == 0) {
             totalCorrect++;
             popLetter.GetComponent<Animator>().enabled = true;
             popLetter.GetComponent<Animator>().SetTrigger("Correct");
@@ -186,23 +200,14 @@ public class LyricGenerator : MonoBehaviour {
         }
 
         textfield.text = ((int)(((float)totalCorrect / symbolsTerminated) * 100)).ToString() + "%";
-            
-        if (signScreenOrder[sign].Count <= 0)
-            signScreenOrder.Remove(sign);
     }
 
     /// <summary>
     /// Called when the song has changed and we need to remove all of the symbols currently on the screen and reset fields
     /// </summary>
-    public void ResetStats() {
-        Start();
-
-        foreach (string sign in signScreenOrder.Keys) {
-            while (signScreenOrder[sign].Count > 0) {
-                GameObject popLetter = signScreenOrder[sign].Dequeue();
-                DestroyImmediate(popLetter, true);
-            }
-            signScreenOrder.Remove(sign);
-        }
+    public void ClearScreen() {
+        isClearing = true;
+        while (signScreenOrder.Count > 0)
+            DestroyImmediate(signScreenOrder.Dequeue(), true);
     }
 }

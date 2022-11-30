@@ -24,6 +24,10 @@ public class Symbol : MonoBehaviour {
         this.sign = sign;
     }
 
+    public string GetSign() {
+        return sign;
+    }
+
     public void SetSprite(Sprite sprite) {
         gameObject.GetComponent<SpriteRenderer>().sprite = sprite;
         gameObject.GetComponent<SpriteRenderer>().sortingOrder = 5;
@@ -35,6 +39,10 @@ public class Symbol : MonoBehaviour {
 
     public float GetHeight() {
         return gameObject.GetComponent<SpriteRenderer>().bounds.size.y;
+    }
+
+    public void DestroyMe() {
+        Destroy(gameObject);
     }
 
     /// <summary>
