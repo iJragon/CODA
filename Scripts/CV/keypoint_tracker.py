@@ -119,9 +119,14 @@ while True:
     if(total_dist1 > 3 or total_dist2 > 3 or np.isnan(total_dist1) or np.isnan(total_dist2)):
         print("please move into frame!")
     elif(total_dist1 < total_dist2):
+<<<<<<< HEAD
         output = "C"
         print(output)
         keyboardEmulate(output, hold_space=False)
+=======
+        print("a")
+        keyboardEmulate('a')
+>>>>>>> 259d42f20943acab0d78e9cd7a60444aabb7ac84
         # time.sleep(0.5)
     else:
         output = 1
