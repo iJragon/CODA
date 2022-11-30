@@ -24,9 +24,11 @@
 
 ` │    │   ├── camera.py`: webcam capture setup
 
-` │    │   └── ground_truth.py`: raw ground truth images
+` │    │   ├── ground_truth.py`: raw ground truth images
 
-` │    │   └── keyboard.py`: keyboard emulator helper
+` │    │   ├── keyboard.py`: keyboard emulator helper
+
+` │    │   └── single_annotation.py/`: annotate gt images
 
 ` │   └── keypoint_tracker.py`: main entry point
 

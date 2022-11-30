@@ -7,11 +7,11 @@ import itertools
 from util.keyboard import keyboardEmulate
 from util.camera import Mode
 from util.camera import get_capture_device
-from single_annotation_test import gt
+from Scripts.CV.util.single_annotation import gt
+
 # initializations
 m = Mode.WEBCAM_INT
 cap = get_capture_device(m)
-path = "./realistic.jpg"
 
 def calc_landmark_list(image, landmarks):
     image_width, image_height = image.shape[1], image.shape[0]
@@ -114,7 +114,7 @@ while True:
             most_probable_k = k
 
     output = ""
-    if(curr_dist > 7 or np.isnan(curr_dist)):
+    if(curr_dist > 4 or np.isnan(curr_dist)):
         print("please move into frame!")
     else:
         output = most_probable_k
