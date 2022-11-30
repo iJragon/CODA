@@ -17,7 +17,7 @@ public class Symbol : MonoBehaviour {
         gameObject.transform.Translate(new Vector3(0, -speed * Time.deltaTime, 0));
         /* Remove the symbol and decrease the player's accuracy if it reaches the bottom */
         if (!isDestroyed && gameObject.transform.position.y < bottomY)
-            LyricGenerator.instance.RemoveLyric(sign);
+            LyricGenerator.instance.RemoveLyric("");
     }
 
     public void SetSign(string sign) {

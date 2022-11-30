@@ -176,15 +176,17 @@ public class LyricGenerator : MonoBehaviour {
         symbolsTerminated++;
         /* Get the lowest symbol on the screen
          * If the corresponding sign on the symbol matches with what the player signed, then give score
-         * Else pop up an error message
+         * If the player doesn't sign anything or is incorrect and the symbol despawns, then error
          */
-        GameObject popLetter = signScreenOrder.Dequeue();
+        GameObject popLetter = signScreenOrder.Peek();
         if (popLetter.GetComponent<Symbol>().GetSign().CompareTo(sign) == 0) {
             totalCorrect++;
             popLetter.GetComponent<Animator>().enabled = true;
             popLetter.GetComponent<Animator>().SetTrigger("Correct");
             popLetter.GetComponent<Symbol>().isDestroyed = true;
-        } else {
+            signScreenOrder.Dequeue();
+        }
+        if (sign.Length == 0){
             // If there are error messages ready in our messages pool (idle), then reuse them
             // Otherwise, if all messages are currently busy and there's nothing reusable in our pool, then create a new one
             if (errorMessages.Count > 0) {
@@ -196,6 +198,7 @@ public class LyricGenerator : MonoBehaviour {
 
             AudioManager.instance.Play("ErrorSound");
             popLetter.GetComponent<Symbol>().isDestroyed = true;
+            signScreenOrder.Dequeue();
             DestroyImmediate(popLetter, true);
         }
 
