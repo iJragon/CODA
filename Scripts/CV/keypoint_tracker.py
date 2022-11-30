@@ -7,11 +7,10 @@ import itertools
 from util.keyboard import keyboardEmulate
 from util.camera import Mode
 from util.camera import get_capture_device
-from single_annotation_test import gt_A, gt_B, gt_C, gt_L, gt_1, gt_2, gt_3
-
+from single_annotation_test import gt
 # initializations
 m = Mode.WEBCAM_INT
-cap = get_capture_device(Mode.WEBCAM_INT)
+cap = get_capture_device(m)
 path = "./realistic.jpg"
 
 def calc_landmark_list(image, landmarks):
@@ -80,10 +79,11 @@ while True:
         # print(results.multi_hand_lanAAAAAdmarks)
         for handLms in results.multi_hand_landmarks:
             lmlive = calc_landmark_list(img, handLms)
-            # print(type(lmlive))
             for id, lm in enumerate(handLms.landmark):
+                '''
+                    optional: draw circles for all the landmark points
+                '''
                 # print("lm shape",id, lm) # lm has three dimensions which we can use to determine pose
-
                 h, w, c = img.shape
                 cx, cy = int(lm.x * w), int(lm.y * h)
                 # print(id, cx, cy)
@@ -101,46 +101,30 @@ while True:
     lmlivepre = pre_process_landmark(lmlive)
     nplmlivepre = np.array(lmlivepre).reshape((sh))
 
-    # print(nplmlivepre)
-
-    diff = gt_C() - nplmlivepre
-    diff2 = gt_1() - nplmlivepre
-
-    norm = np.linalg.norm(diff, axis=0)
-    norm2 = np.linalg.norm(diff2, axis=0)
-    total_dist1 = np.sum(norm)
-    total_dist2 = np.sum(norm2)
-
-    print("d1", total_dist1)
-    print("d2", total_dist2)
-
+    # closest scalar distance
+    closest_dist = float('inf')
+    most_probable_k = None
+    
+    # examine all the gts we have in the dict and check which one is the closest
+    for k in gt().keys():
+        diff = gt()[k] - nplmlivepre
+        curr_dist = np.sum(np.linalg.norm(diff, axis=0))
+        if (curr_dist < closest_dist):
+            closest_dist = curr_dist
+            most_probable_k = k
 
     output = ""
-    if(total_dist1 > 3 or total_dist2 > 3 or np.isnan(total_dist1) or np.isnan(total_dist2)):
+    if(curr_dist > 7 or np.isnan(curr_dist)):
         print("please move into frame!")
-    elif(total_dist1 < total_dist2):
-<<<<<<< HEAD
-        output = "C"
-        print(output)
-        keyboardEmulate(output, hold_space=False)
-=======
-        print("a")
-        keyboardEmulate('a')
->>>>>>> 259d42f20943acab0d78e9cd7a60444aabb7ac84
-        # time.sleep(0.5)
     else:
-        output = 1
-        print(str(output))
-        keyboardEmulate(str(output))
-        # time.sleep(0.5)
+        output = most_probable_k
+        print(str(most_probable_k))
+        keyboardEmulate(str(most_probable_k))
 
     cv2.putText(img, str(output), (10, 70), cv2.FONT_HERSHEY_PLAIN, 3,
                 (255, 0, 255), 3)
  
     cv2.imshow("Image", img)
-    if iteration == 0:
-        cv2.imwrite("./out/annotations/single_test.png", img)
-        iteration += 1
 
     # Press Q on keyboard to stop recording
     if cv2.waitKey(1) & 0xFF == ord('q'):
