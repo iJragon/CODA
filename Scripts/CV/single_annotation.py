@@ -69,7 +69,6 @@ def pre_process_landmark(landmark_list):
 '''
      The following code will help annotate the ground-truth image
 '''
-cap = cv2.VideoCapture(0)
 
 if results.multi_hand_landmarks:
     # print(results.multi_hand_landmarks)
@@ -90,8 +89,8 @@ result = np.array(normalized_landmark_list).reshape((numpy_landmark_list.shape))
 
 # print the result to capture the annotation's array, then generate a lookup function
 
-print(repr(result))
-print(result.shape)
+# print(repr(result))
+# print(result.shape)
 
 write_path = "./res/annotations/" + target
 cv2.imwrite(write_path, img)
@@ -721,6 +720,3 @@ def gt():
         [ 0.15428571 ,-0.32571429]])
     }
     return d
-
-print(gt()["d"].shape)
-print(gt().keys())

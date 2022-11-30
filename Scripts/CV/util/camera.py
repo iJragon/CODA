@@ -8,6 +8,16 @@ class Mode(Enum):
   RECORDING = 2     # pre-recorded video
   PICTURE = 3       # single frame image
 
+
+'''
+  Note: if there is another resource using the same camera feed
+  and it is not released, then it will simply error out.
+  If you think a camera should be working, then you should
+  look for other references to the same camera object
+  Bonus: submit a bug report to give a more detailed resource report
+  Bonus, Bonus: look into the debug logs to see if there was a busy flag set
+'''
+
 def get_capture_device(m: Mode, path="", index=0):
   cap = None
 
@@ -41,6 +51,8 @@ if __name__ == "__main__":
   # Check if camera opened successfully
   if (cap.isOpened() == False): 
     print("Unable to access camera feed, please try another index")
+  
+  print("helper finds",repr(cap))
 
   # Default resolutions of the frame are obtained.The default resolutions are system dependent.
   
