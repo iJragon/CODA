@@ -1,38 +1,17 @@
 import cv2
 import mediapipe as mp
-from enum import Enum
 import time
 import numpy as np
 import copy
 import itertools
-from keyboardEmulator import keyboardEmulate
-from annotation_test import gt_A, gt_B, gt_C, gt_L, gt_1, gt_2, gt_3
-
-# different analysis modes
-class Mode(Enum):
-  WEBCAM_INT = 0
-  WEBCAM_EX = 1
-  RECORDING = 2
-  PICTURE = 3
-
+from util.keyboard import keyboardEmulate
+from util.camera import Mode
+from util.camera import get_capture_device
+from single_annotation_test import gt
 # initializations
-m = Mode.WEBCAM_EX
-cap = None
+m = Mode.WEBCAM_INT
+cap = get_capture_device(m)
 path = "./realistic.jpg"
-
-# Create a VideoCapture object
-if (m==Mode.WEBCAM_INT):
-    cap = cv2.VideoCapture(0)
-elif (m==Mode.WEBCAM_EX):
-    cap = cv2.VideoCapture(2)
-    # cap = cvCreateCameraCapture( -1 )
-    if (cap.isOpened() == False):
-        print("external camera failed, defaulting to built-in")
-        cap = cv2.VideoCapture(0)
-elif (m==Mode.RECORDING):
-    cap = cv2.VideoCapture(path)
-else:
-    cap = cv2.imread(path)
 
 def calc_landmark_list(image, landmarks):
     image_width, image_height = image.shape[1], image.shape[0]
@@ -97,13 +76,14 @@ while True:
     # print(results.multi_hand_landmarks)
  
     if results.multi_hand_landmarks:
-        # print(results.multi_hand_landmarks)
+        # print(results.multi_hand_lanAAAAAdmarks)
         for handLms in results.multi_hand_landmarks:
             lmlive = calc_landmark_list(img, handLms)
-            # print(type(lmlive))
             for id, lm in enumerate(handLms.landmark):
+                '''
+                    optional: draw circles for all the landmark points
+                '''
                 # print("lm shape",id, lm) # lm has three dimensions which we can use to determine pose
-
                 h, w, c = img.shape
                 cx, cy = int(lm.x * w), int(lm.y * h)
                 # print(id, cx, cy)
@@ -115,43 +95,36 @@ while True:
     cTime = time.time()
     fps = 1 / (cTime - pTime)
     pTime = cTime
- 
-    cv2.putText(img, str(int(fps)), (10, 70), cv2.FONT_HERSHEY_PLAIN, 3,
-                (255, 0, 255), 3)
- 
-    cv2.imshow("Image", img)
-    if iteration == 0:
-        cv2.imwrite("./out/annotations/single_test.png", img)
-        iteration += 1
 
     nplmlive = np.array(lmlive)
     sh = nplmlive.shape
     lmlivepre = pre_process_landmark(lmlive)
     nplmlivepre = np.array(lmlivepre).reshape((sh))
 
-    # print(nplmlivepre)
+    # closest scalar distance
+    closest_dist = float('inf')
+    most_probable_k = None
+    
+    # examine all the gts we have in the dict and check which one is the closest
+    for k in gt().keys():
+        diff = gt()[k] - nplmlivepre
+        curr_dist = np.sum(np.linalg.norm(diff, axis=0))
+        if (curr_dist < closest_dist):
+            closest_dist = curr_dist
+            most_probable_k = k
 
-    diff = gt_A() - nplmlivepre
-    diff2 = gt_1() - nplmlivepre
-
-    norm = np.linalg.norm(diff, axis=0)
-    norm2 = np.linalg.norm(diff2, axis=0)
-    total_dist1 = np.sum(norm)
-    total_dist2 = np.sum(norm2)
-
-    print("d1", total_dist1)
-    print("d2", total_dist2)
-
-    if(total_dist1 > 3 or total_dist2 > 3 or np.isnan(total_dist1) or np.isnan(total_dist2)):
+    output = ""
+    if(curr_dist > 7 or np.isnan(curr_dist)):
         print("please move into frame!")
-    elif(total_dist1 < total_dist2):
-        print("a")
-        keyboardEmulate('a')
-        # time.sleep(0.5)
     else:
-        print("1")
-        keyboardEmulate('1')
-        # time.sleep(0.5)
+        output = most_probable_k
+        print(str(most_probable_k))
+        keyboardEmulate(str(most_probable_k))
+
+    cv2.putText(img, str(output), (10, 70), cv2.FONT_HERSHEY_PLAIN, 3,
+                (255, 0, 255), 3)
+ 
+    cv2.imshow("Image", img)
 
     # Press Q on keyboard to stop recording
     if cv2.waitKey(1) & 0xFF == ord('q'):
