@@ -18,7 +18,6 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private GameObject accuracy_Text;      // Score (the notepad) on the desktop
     [SerializeField] private GameObject taskbarGlow;        // Glowing taskbar during gameplay
     [SerializeField] private GameObject taskbarUnglow;      // Regular taskbar before gameplay
-    [SerializeField] private GameObject instructions;       // Instructions manual pop-up
     [SerializeField] private GameObject title;              // Logo on desktpop
     [SerializeField] private GameObject windowsFade;        // Fade in/out black image
     [SerializeField] private GameObject playlist;           // Playlist (song selection) pop-up
@@ -84,7 +83,6 @@ public class GameManager : MonoBehaviour {
         /* Deactivate the desktop visuals */
         start_Wallpaper.SetActive(false);
         CODA_Icon.SetActive(false);
-        instructions.SetActive(false);
         title.SetActive(false);
         playlist.SetActive(false);
 
@@ -105,7 +103,6 @@ public class GameManager : MonoBehaviour {
 
         /* Deactivate the game visuals */
         CODA_App.SetActive(false);
-        instructions.SetActive(true);
         taskbarGlow.SetActive(false);
         game_Video.SetActive(false);
         accuracy_Text.SetActive(false);
@@ -115,6 +112,9 @@ public class GameManager : MonoBehaviour {
         isPlaying = false;
     }
 
+    /// <summary>
+    /// When the player presses the Start button in the song selection window
+    /// </summary>
     public void StartGame() {
         ResumeGame();
         /* If we changed the song while we were paused, update the current song and update the symbol details */
@@ -131,6 +131,9 @@ public class GameManager : MonoBehaviour {
             StartupGame();
     }
 
+    /// <summary>
+    /// Pause the game
+    /// </summary>
     public void PauseGame() {
         Time.timeScale = 0f;
         AudioListener.pause = true;
@@ -140,6 +143,9 @@ public class GameManager : MonoBehaviour {
         pausePanel.SetActive(true);
     }
 
+    /// <summary>
+    /// Start the game
+    /// </summary>
     public void ResumeGame() {
         Time.timeScale = 1f;
         AudioListener.pause = false;
@@ -161,9 +167,14 @@ public class GameManager : MonoBehaviour {
     /// Called when we restart the song after being paused so we resume the video but transition to song change mechanics
     /// </summary>
     public void RestartSong() {
+        /* Don't restart the song if we don't currently have a song playing */
+        if (!isPlaying) {
+            pausePanel.SetActive(false);
+            return;
+        }
+
         Time.timeScale = 1f;
         AudioListener.pause = false;
-        pausePanel.SetActive(false);
 
         /* Game was paused when player selects restart song option, so resume the video */
         if (isPlaying)
@@ -204,16 +215,24 @@ public class GameManager : MonoBehaviour {
         FadeOut();
     }
 
+    /// <summary>
+    /// Called when the video is finished playing
+    /// </summary>
+    /// <param name="vp"></param>
     private void OnVideoFinished(UnityEngine.Video.VideoPlayer vp) {
         StartCoroutine(SongComplete());
     }
 
+    /// <summary>
+    /// Called when the song is finished playing and transition to the stats 
+    /// </summary>
+    /// <returns></returns>
     public IEnumerator SongComplete() {
         FadeIn();
         yield return new WaitForSeconds(2f);
         windowsFade.GetComponent<Animator>().SetTrigger("fastFadeOut");
+        LyricGenerator.signToAccuracy[] worstSigns = LyricGenerator.instance.GetWorstSigns();
         ResetGame();
-        Debug.Log("Display stats now.");
         HideCODA_App(); 
     }
 }

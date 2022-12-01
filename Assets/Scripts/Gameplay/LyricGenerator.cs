@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 
 public class LyricGenerator : MonoBehaviour {
     public static LyricGenerator instance; 
+    private bool isClearing;                                        // If we're clearing, don't generate any more symbols
 
     [SerializeField] private GameObject symbolPrefab;               // Symbol prefab that we are displaying to the 
     private GameObject symbolInstant;                               // Symbol object that is instantiated
@@ -19,15 +18,16 @@ public class LyricGenerator : MonoBehaviour {
     [SerializeField] private GameObject errorMessage;               // Error message prefab to display onto the screen
     public Queue<GameObject> errorMessages;                         // Pool of error messages to allow reusability
     private int currSortingOrder;                                   // Ensure each newly-spawning error message is layered on top of previous
+    [SerializeField] private GameObject glowEffect;                 // Glow effect that runs every time player is correct
 
     private Queue<GameObject> signScreenOrder;                      // All symbols appearing on the screen in y-ascending order
+    private Dictionary<string, int> signToMissedCount;              // Map signs to the number of times player missed
 
     private float currTimer;                                        // Timings for when the symbols actually show up on the screen
     private CSVReader reader;                                       // Read in the data for the current song 
     private int currSymbolIndex;                                    // Current index of the symbol into CSV of current song 
     private float nextSymbolArrival;                                // When the next symbol should arrive (timed to hit the endpointY)
     private string nextSymbol;                                      // Next letter/word we have to hit
-    private bool isBeatable;                                        // The time at which player can perform a sign
 
     [SerializeField] private TextMeshProUGUI textfield;             // Field where score gets written into
     private int totalCorrect;                                       // How many symbols player knocked out on the beat
@@ -43,7 +43,13 @@ public class LyricGenerator : MonoBehaviour {
     };
     public signToSprite[] ssDict;
 
-    private bool isClearing;                                        // If we're clearing, don't generate any more symbols
+    public struct signToAccuracy {                                  // Key-Value pair for sign to number of times they were missed
+        public string sign;
+        public int amtMissed;
+    };
+
+    private signToAccuracy[] topWorstSignsMissed;                   // Array of top worst signs (missed the most times)
+
 
     private void Awake() {
         if (instance == null)
@@ -55,8 +61,14 @@ public class LyricGenerator : MonoBehaviour {
             signToSprites[s2s.sign] = s2s.sprite;
 
         signScreenOrder = new Queue<GameObject>();
+        signToMissedCount = new Dictionary<string, int>();
         reader = gameObject.GetComponent<CSVReader>();
         errorMessages = new Queue<GameObject>();
+        topWorstSignsMissed = new signToAccuracy[3] {
+            new signToAccuracy() {sign="", amtMissed=0},
+            new signToAccuracy() {sign="", amtMissed=0},
+            new signToAccuracy() {sign="", amtMissed=0}
+        };
     }
 
     private void Start() {
@@ -64,6 +76,8 @@ public class LyricGenerator : MonoBehaviour {
     }
 
     private void OnEnable() {
+        isClearing = false;
+        glowEffect.SetActive(true);
         /* Start with the first symbol */
         currTimer = 0f;
         currSymbolIndex = 0;
@@ -72,8 +86,6 @@ public class LyricGenerator : MonoBehaviour {
         nextSymbolArrival = reader.mySymbolList.symbols[currSymbolIndex].timeStamp - SongManager.instance.songs[SongManager.instance.currentSongIdx].offset;
         nextSymbol = reader.mySymbolList.symbols[currSymbolIndex].sign.ToLower();
         nextSymbol = nextSymbol.Substring(0, nextSymbol.Length - 1);
-        isClearing = false;
-        isBeatable = false;
 
         /* Reset accuracy to 100% */
         totalCorrect = 0;
@@ -179,8 +191,10 @@ public class LyricGenerator : MonoBehaviour {
          * If the player doesn't sign anything or is incorrect and the symbol despawns, then error
          */
         GameObject popLetter = signScreenOrder.Peek();
-        if (popLetter.GetComponent<Symbol>().GetSign().CompareTo(sign) == 0) {
+        string currSign = popLetter.GetComponent<Symbol>().GetSign();
+        if (currSign.CompareTo(sign) == 0) {
             totalCorrect++;
+            glowEffect.GetComponent<Animator>().SetTrigger("Glow");
             popLetter.GetComponent<Animator>().enabled = true;
             popLetter.GetComponent<Animator>().SetTrigger("Correct");
             popLetter.GetComponent<Symbol>().isDestroyed = true;
@@ -196,6 +210,29 @@ public class LyricGenerator : MonoBehaviour {
             } else
                 Instantiate(errorMessage).GetComponent<SpriteRenderer>().sortingOrder = ++currSortingOrder;
 
+            // Updating the map of the sign the player missed to the number of times it's already been missed
+            if (!signToMissedCount.ContainsKey(currSign))
+                signToMissedCount.Add(currSign, 1);
+            else
+                signToMissedCount[currSign]++;
+            // Update the top 3 worst signs if needed (sign, amount of missed times)
+            for (int i = 0; i < 3; i++) {
+                // If the sign already exists on the top 3, then just update the amount of missed times
+                if (currSign.CompareTo(topWorstSignsMissed[i].sign) == 0) {
+                    topWorstSignsMissed[i].amtMissed++;
+                    break;
+                }
+                // If the current sign's number exceeds one of the top 3, then shift everything down, then update
+                if (signToMissedCount[currSign] > topWorstSignsMissed[i].amtMissed) {
+                    for (int j = 2; j > i; j--) {
+                        topWorstSignsMissed[j] = topWorstSignsMissed[j - 1];
+                    }
+                    topWorstSignsMissed[i].sign = currSign;
+                    topWorstSignsMissed[i].amtMissed = signToMissedCount[currSign];
+                    break;
+                }
+            }
+
             AudioManager.instance.Play("ErrorSound");
             popLetter.GetComponent<Symbol>().isDestroyed = true;
             signScreenOrder.Dequeue();
@@ -205,6 +242,10 @@ public class LyricGenerator : MonoBehaviour {
         textfield.text = ((int)(((float)totalCorrect / symbolsTerminated) * 100)).ToString() + "%";
     }
 
+    public signToAccuracy[] GetWorstSigns() {
+        return topWorstSignsMissed;
+    }
+
     /// <summary>
     /// Called when the song has changed and we need to remove all of the symbols currently on the screen and reset fields
     /// </summary>
@@ -212,5 +253,6 @@ public class LyricGenerator : MonoBehaviour {
         isClearing = true;
         while (signScreenOrder.Count > 0)
             DestroyImmediate(signScreenOrder.Dequeue(), true);
+        glowEffect.SetActive(false);
     }
 }

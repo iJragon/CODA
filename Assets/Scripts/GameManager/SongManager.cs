@@ -17,6 +17,10 @@ public class SongManager : MonoBehaviour {
     [SerializeField] private TextMeshProUGUI singers;
     [SerializeField] private TextMeshProUGUI difficulty;
     [SerializeField] private TextMeshProUGUI length;
+    [SerializeField] private Image chilies;
+    [SerializeField] private Sprite chili1;
+    [SerializeField] private Sprite chili2;
+    [SerializeField] private Sprite chili3;
 
     private void Awake() {
         if (instance == null)
@@ -57,6 +61,17 @@ public class SongManager : MonoBehaviour {
         singers.text = songs[pausedSongSelectionIdx].singer;
         difficulty.text = songs[pausedSongSelectionIdx].difficulty;
         length.text = CalculateLength(songs[pausedSongSelectionIdx].videoClip.length);
+        switch (difficulty.text) {
+            case "Easy":
+                chilies.sprite = chili1;
+                break;
+            case "Medium":
+                chilies.sprite = chili2;
+                break;
+            case "Hard":
+                chilies.sprite = chili3;
+                break;
+        }
     }
 
     /// <summary>
