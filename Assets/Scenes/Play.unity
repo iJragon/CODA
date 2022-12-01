@@ -6091,6 +6091,7 @@ MonoBehaviour:
   songs:
   - {fileID: 11400000, guid: 7744609349c33524da48756bfdff7af2, type: 2}
   - {fileID: 11400000, guid: f34d450ccdf66504baa149f5fd176e09, type: 2}
+  - {fileID: 11400000, guid: 33406c62d7babe040a056e4fe67d86b6, type: 2}
   currentSongIdx: 0
   pausedSongSelectionIdx: 0
   cover: {fileID: 1123563851}
