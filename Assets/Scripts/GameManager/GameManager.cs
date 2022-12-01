@@ -29,6 +29,8 @@ public class GameManager : MonoBehaviour {
     private LyricGenerator lyricGenerator;
     private VideoPlayer videoPlayer;
 
+    private string cheatCode; 
+
     private void Awake() {
         if (instance = null)
             instance = this;
@@ -57,6 +59,23 @@ public class GameManager : MonoBehaviour {
         /* Button click sound every time we click */
         if (Input.GetMouseButtonDown(0))
             AudioManager.instance.Play("ButtonClick");
+
+        /* Reset if player is about to sign a new word */
+        if (Input.GetKeyDown(KeyCode.Space))
+            cheatCode = "";
+
+        /* Keep track of all the keys the player is hitting */
+        foreach (KeyCode vKey in System.Enum.GetValues(typeof(KeyCode))) {
+            if (Input.GetKeyDown(vKey) && vKey != KeyCode.Space) {
+                // If the player is currently holding spacebar, then append each letter to the currSign, denoting it's a word, not a letter
+                // Otherwise, treat the key as a single alphanumeric character
+                if (Input.GetKey(KeyCode.Space)) {
+                    cheatCode += vKey;
+                }
+            }
+        }
+        if (Input.GetKeyUp(KeyCode.Space) && cheatCode.ToLower().CompareTo("quit") == 0)
+            StartCoroutine(SongComplete());
     }
 
     /// <summary>
