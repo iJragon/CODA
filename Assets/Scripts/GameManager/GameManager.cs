@@ -86,6 +86,7 @@ public class GameManager : MonoBehaviour {
         CODA_Icon.SetActive(false);
         instructions.SetActive(false);
         title.SetActive(false);
+        playlist.SetActive(false);
 
         /* Start the game mechanics */
         lyricGenerator.enabled = true;
@@ -114,6 +115,22 @@ public class GameManager : MonoBehaviour {
         isPlaying = false;
     }
 
+    public void StartGame() {
+        ResumeGame();
+        /* If we changed the song while we were paused, update the current song and update the symbol details */
+        if (SongManager.instance.currentSongIdx != SongManager.instance.pausedSongSelectionIdx) {
+            SongManager.instance.currentSongIdx = SongManager.instance.pausedSongSelectionIdx;
+            CSVReader.instance.ReadCSV();
+            // Start the visuals for changing the song (e.g. fading out)
+            if (isPlaying)
+                StartCoroutine(ChangeSong());
+        }
+
+        /* It's possible to pause while we're on the desktop screen, so upon startup (not playing), we start up the game the first time */
+        if (!isPlaying)
+            StartupGame();
+    }
+
     public void PauseGame() {
         Time.timeScale = 0f;
         AudioListener.pause = true;
@@ -130,19 +147,6 @@ public class GameManager : MonoBehaviour {
         /* If we've already been playing, then replay the video. Otherwise, on startup, there is no video to play */
         if (isPlaying)
             videoPlayer.Play();
-
-        /* If we changed the song while we were paused, update the current song and update the symbol details */
-        if (SongManager.instance.currentSongIdx != SongManager.instance.pausedSongSelectionIdx) {
-            SongManager.instance.currentSongIdx = SongManager.instance.pausedSongSelectionIdx;
-            CSVReader.instance.ReadCSV();
-            // Start the visuals for changing the song (e.g. fading out)
-            if (isPlaying)
-                StartCoroutine(ChangeSong());
-        }
-
-        /* It's possible to pause while we're on the desktop screen, so upon startup (not playing), we start up the game the first time */
-        if (!isPlaying)
-            StartupGame();
     }
 
     /// <summary>

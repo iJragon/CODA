@@ -27,6 +27,7 @@ public class SongManager : MonoBehaviour {
         /* Default to the first song on the playlist */
         currentSongIdx = 0;
         pausedSongSelectionIdx = currentSongIdx;
+        UpdateDescription();
     }
 
     /// <summary>

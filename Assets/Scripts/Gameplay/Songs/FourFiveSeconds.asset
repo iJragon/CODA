@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15e8a01da30a7214ba66fc402f660387, type: 3}
   m_Name: FourFiveSeconds
   m_EditorClassIdentifier: 
-  cover: {fileID: 21300000, guid: ef0c23148f8232544aab26d6fe230fc4, type: 3}
+  cover: {fileID: 21300000, guid: 48040aa77f20725468dfe7e03a3cb8dc, type: 3}
   title: FourFiveSeconds
   singer: Rihanna, Kanye West, Paul McCartney
   offset: 1
