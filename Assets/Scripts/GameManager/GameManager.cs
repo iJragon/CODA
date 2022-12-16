@@ -1,11 +1,11 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Video;
+//using UnityEditor.Scripting.Python;
+//using UnityEditor;
+//using System.IO;
+
 
 public class GameManager : MonoBehaviour {
     public static GameManager instance;
@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private GameObject windowsFade;        // Fade in/out black image
     [SerializeField] private GameObject playlist;           // Playlist (song selection) pop-up
     [SerializeField] private GameObject pausePanel;         // Invisible panel for player to deselect pop-ups
+    [SerializeField] private TextMeshProUGUI dDetect;       // Debugging text to see what sign player is doing
 
     /* If we are already mid-gameplay (otherwise, we just booted for the first time and are on the desktop screen */
     public bool isPlaying;
@@ -34,6 +35,8 @@ public class GameManager : MonoBehaviour {
     private void Awake() {
         if (instance = null)
             instance = this;
+
+        //PythonRunner.RunFile(Path.Combine(Application.dataPath, "Detection/app.py"));
     }
 
     private void Start() {
@@ -56,6 +59,11 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Update() {
+        foreach (KeyCode vKey in System.Enum.GetValues(typeof(KeyCode))) {
+            if (Input.GetKeyDown(vKey))
+                dDetect.text = ((char)vKey).ToString().ToUpper();
+        }
+
         /* Button click sound every time we click */
         if (Input.GetMouseButtonDown(0))
             AudioManager.instance.Play("ButtonClick");
