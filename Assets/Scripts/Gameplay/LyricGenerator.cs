@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class LyricGenerator : MonoBehaviour {
@@ -84,8 +85,7 @@ public class LyricGenerator : MonoBehaviour {
         spawnIndex = currSymbolIndex;
         isForwards = true;
         nextSymbolArrival = reader.mySymbolList.symbols[currSymbolIndex].timeStamp - SongManager.instance.songs[SongManager.instance.currentSongIdx].offset;
-        nextSymbol = reader.mySymbolList.symbols[currSymbolIndex].sign.ToLower();
-        nextSymbol = nextSymbol.Substring(0, nextSymbol.Length - 1);
+        nextSymbol = reader.mySymbolList.symbols[currSymbolIndex].sign.ToLower().Replace("\r", "");
 
         /* Reset accuracy to 100% */
         totalCorrect = 0;
@@ -125,8 +125,7 @@ public class LyricGenerator : MonoBehaviour {
                 }
                 if (currSymbolIndex < reader.mySymbolList.symbols.Length) {
                     nextSymbolArrival = reader.mySymbolList.symbols[currSymbolIndex].timeStamp - SongManager.instance.songs[SongManager.instance.currentSongIdx].offset;
-                    nextSymbol = reader.mySymbolList.symbols[currSymbolIndex].sign.ToLower();
-                    nextSymbol = nextSymbol.Substring(0, nextSymbol.Length - 1);
+                    nextSymbol = reader.mySymbolList.symbols[currSymbolIndex].sign.ToLower().Replace("\r", "");
                 }
             }
         }

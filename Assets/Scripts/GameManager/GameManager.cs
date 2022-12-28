@@ -60,7 +60,10 @@ public class GameManager : MonoBehaviour {
 
     private void Update() {
         foreach (KeyCode vKey in System.Enum.GetValues(typeof(KeyCode))) {
-            if (Input.GetKeyDown(vKey))
+            if (Input.GetKeyDown(vKey) && 
+                (('0' <= (char) vKey && (char)vKey <= '9') ||
+                ('A' <= (char)vKey && (char)vKey <= 'Z') || 
+                ('a' <= (char)vKey && (char)vKey <= 'z')))
                 dDetect.text = ((char)vKey).ToString().ToUpper();
         }
 
