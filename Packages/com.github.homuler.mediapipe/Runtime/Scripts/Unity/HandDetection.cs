@@ -42,7 +42,6 @@ public class HandDetection : MonoBehaviour {
                 var newLandmarks = SymbolClassificationProblemBuilder.CreateNodes(preProcessedLandmarkList.ToArray());
                 var predictedSymbol = model.Predict(newLandmarks);
                 symbol = _PredictionDictionary[(int)predictedSymbol];
-                //Debug.Log($"The prediction is {_PredictionDictionary[(int)predictedSymbol]}");
 
                 #region Mathematical NumPy method
                 ////Closest scalar distance

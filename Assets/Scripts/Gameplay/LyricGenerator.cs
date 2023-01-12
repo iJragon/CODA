@@ -136,29 +136,32 @@ public class LyricGenerator : MonoBehaviour {
             float bottomEdge = firstSymbol.transform.position.y - (firstSymbol.GetComponent<Symbol>().GetHeight() / 2);
             float topEdge = firstSymbol.transform.position.y + (firstSymbol.GetComponent<Symbol>().GetHeight() / 2);
             if (bottomEdge <= endpointY && topEdge >= endpointY) {
-                /* Reset if player is about to sign a new word */
-                if (Input.GetKeyDown(KeyCode.Space))
-                    currSign = "";
+                /* Using Google MediaPipe Plugin */
+                RemoveLyric(HandDetection.symbol.ToLower());
 
-                /* Keep track of all the keys the player is hitting */
-                foreach (KeyCode vKey in System.Enum.GetValues(typeof(KeyCode))) {
-                    if (Input.GetKeyDown(vKey) && vKey != KeyCode.Space) {
-                        // If the player is currently holding spacebar, then append each letter to the currSign, denoting it's a word, not a letter
-                        // Otherwise, treat the key as a single alphanumeric character
-                        if (Input.GetKey(KeyCode.Space)) {
-                            currSign += vKey;
-                        } else {
-                            currSign = ((char)vKey).ToString().ToLower();
-                            RemoveLyric(currSign);
-                        }
-                    }
-                }
+                ///* Reset if player is about to sign a new word */
+                //if (Input.GetKeyDown(KeyCode.Space))
+                //    currSign = "";
 
-                /* Once player releases space, the word is complete. Now check if the word is one of the ones appearing on the screen */
-                if (Input.GetKeyUp(KeyCode.Space)) {
-                    currSign = currSign.ToLower();
-                    RemoveLyric(currSign);
-                }
+                ///* Keep track of all the keys the player is hitting */
+                //foreach (KeyCode vKey in System.Enum.GetValues(typeof(KeyCode))) {
+                //    if (Input.GetKeyDown(vKey) && vKey != KeyCode.Space) {
+                //        // If the player is currently holding spacebar, then append each letter to the currSign, denoting it's a word, not a letter
+                //        // Otherwise, treat the key as a single alphanumeric character
+                //        if (Input.GetKey(KeyCode.Space)) {
+                //            currSign += vKey;
+                //        } else {
+                //            currSign = ((char)vKey).ToString().ToLower();
+                //            RemoveLyric(currSign);
+                //        }
+                //    }
+                //}
+
+                ///* Once player releases space, the word is complete. Now check if the word is one of the ones appearing on the screen */
+                //if (Input.GetKeyUp(KeyCode.Space)) {
+                //    currSign = currSign.ToLower();
+                //    RemoveLyric(currSign);
+                //}
             }
         }
     }
@@ -184,7 +187,6 @@ public class LyricGenerator : MonoBehaviour {
     /// </summary>
     /// <param name="letter"></param> character that we are removing from the screen
     public void RemoveLyric(string sign) {
-        symbolsTerminated++;
         /* Get the lowest symbol on the screen
          * If the corresponding sign on the symbol matches with what the player signed, then give score
          * If the player doesn't sign anything or is incorrect and the symbol despawns, then error
@@ -198,6 +200,7 @@ public class LyricGenerator : MonoBehaviour {
             popLetter.GetComponent<Animator>().SetTrigger("Correct");
             popLetter.GetComponent<Symbol>().isDestroyed = true;
             signScreenOrder.Dequeue();
+            symbolsTerminated++;
         }
         if (sign.Length == 0){
             // If there are error messages ready in our messages pool (idle), then reuse them
@@ -236,6 +239,7 @@ public class LyricGenerator : MonoBehaviour {
             popLetter.GetComponent<Symbol>().isDestroyed = true;
             signScreenOrder.Dequeue();
             DestroyImmediate(popLetter, true);
+            symbolsTerminated++;
         }
 
         textfield.text = ((int)(((float)totalCorrect / symbolsTerminated) * 100)).ToString() + "%";
