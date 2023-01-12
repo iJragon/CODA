@@ -134,9 +134,13 @@ def main():
                 # Landmark calculation
                 landmark_list = calc_landmark_list(debug_image, hand_landmarks)
 
+
                 # Conversion to relative coordinates / normalized coordinates
                 pre_processed_landmark_list = pre_process_landmark(
                     landmark_list)
+
+                print("pre_processed_landmark_list: ", pre_processed_landmark_list)
+
                 pre_processed_point_history_list = pre_process_point_history(
                     debug_image, point_history)
                 # Write to the dataset file
@@ -245,6 +249,7 @@ def pre_process_landmark(landmark_list):
 
         temp_landmark_list[index][0] = temp_landmark_list[index][0] - base_x
         temp_landmark_list[index][1] = temp_landmark_list[index][1] - base_y
+
 
     # Convert to a one-dimensional list
     temp_landmark_list = list(
@@ -506,7 +511,7 @@ def draw_info_text(image, brect, handedness, hand_sign_text,
     if hand_sign_text != "":
         info_text = info_text + ':' + hand_sign_text
         #print(hand_sign_text)
-        keyboardEmulate(hand_sign_text)
+        #keyboardEmulate(hand_sign_text)
     cv.putText(image, info_text, (brect[0] + 5, brect[1] - 4),
                cv.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1, cv.LINE_AA)
 

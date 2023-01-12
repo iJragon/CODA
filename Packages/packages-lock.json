@@ -1,5 +1,11 @@
 {
   "dependencies": {
+    "com.github.homuler.mediapipe": {
+      "version": "file:com.github.homuler.mediapipe",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.unity.2d.animation": {
       "version": "7.0.6",
       "depth": 1,
