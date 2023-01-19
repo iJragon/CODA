@@ -137,7 +137,7 @@ public class LyricGenerator : MonoBehaviour {
             float topEdge = firstSymbol.transform.position.y + (firstSymbol.GetComponent<Symbol>().GetHeight() / 2);
             if (bottomEdge <= endpointY && topEdge >= endpointY) {
                 /* Using Google MediaPipe Plugin */
-                RemoveLyric(HandDetection.symbol.ToLower());
+                RemoveLyric(HandDetection.symbol);
 
                 ///* Reset if player is about to sign a new word */
                 //if (Input.GetKeyDown(KeyCode.Space))

@@ -9,6 +9,6 @@ public class DetectionDebugger : MonoBehaviour {
     [SerializeField] TextMeshProUGUI temp;
 
     private void Update() {
-        temp.text = HandDetection.symbol;
+        temp.text = char.ToUpper(HandDetection.symbol[0]) + HandDetection.symbol.Substring(1);
     }
 }

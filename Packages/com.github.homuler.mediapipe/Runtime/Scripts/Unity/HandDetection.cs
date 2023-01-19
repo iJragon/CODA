@@ -6,13 +6,10 @@ using Mediapipe;
 using System;
 
 public class HandDetection : MonoBehaviour {
-    private Dictionary<int, string> _PredictionDictionary = new Dictionary<int, string>() {
-        { 0, "A" }, { 1, "B" }, { 2, "C" }, { 3, "D" }, { 4, "E" }, { 5, "H" }, { 6, "L" }, { 7, "1" }, { 8, "2" },
-        { 9, "3" }, { 10, "G" }, { 11, "H" }, { 12, "M" }, { 13, "N" }, { 14, "S" }, { 15, "T" }, { 16, "R" },
-        { 17, "4" }, { 18, "W" }, { 19, "Y" }, { 20, "You"}, { 21, "Me" }
-    };
+    public Dictionary<int, string> _PredictionDictionary;
 
     public static string symbol;
+    public static List<double> landmarks;
 
     private C_SVC model;
 
@@ -24,6 +21,11 @@ public class HandDetection : MonoBehaviour {
                 Debug.LogError("Model doesn't exist. Make sure to train first!");
             }
         }
+        _PredictionDictionary = new Dictionary<int, string>() {
+            { 0, "a" }, { 1, "b" }, { 2, "c" }, { 3, "d" }, { 4, "e" }, { 5, "h" }, { 6, "l" }, { 7, "1" }, { 8, "2" },
+            { 9, "3" }, { 10, "g" }, { 11, "h" }, { 12, "m" }, { 13, "n" }, { 14, "s" }, { 15, "t" }, { 16, "r" },
+            { 17, "4" }, { 18, "w" }, { 19, "y" }, { 20, "you"}, { 21, "me" }
+        };
     }
 
     public void DetectSymbol(IList<NormalizedLandmarkList> _currentHandLandmarkLists) {
@@ -37,6 +39,7 @@ public class HandDetection : MonoBehaviour {
                 var landmarkList = CalcLandmarkList(handLandmarks);
 
                 var preProcessedLandmarkList = PreprocessLandmark(landmarkList);
+                landmarks = preProcessedLandmarkList;
                 //Debug.Log(string.Join(",", from f in preProcessedLandmarkList select f));
 
                 var newLandmarks = SymbolClassificationProblemBuilder.CreateNodes(preProcessedLandmarkList.ToArray());

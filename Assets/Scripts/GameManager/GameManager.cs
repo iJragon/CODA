@@ -59,7 +59,8 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Update() {
-        dDetect.text = HandDetection.symbol;
+        if (HandDetection.symbol != null)
+            dDetect.text = char.ToUpper(HandDetection.symbol[0]) + HandDetection.symbol.Substring(1);
 
         /* Button click sound every time we click */
         if (Input.GetMouseButtonDown(0))
