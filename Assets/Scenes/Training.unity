@@ -244,6 +244,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e6be71b11bb85f419369b56536d0520, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  signs:
+  - A
+  - B
+  - C
+  - D
+  - E
+  - 
+  - L
+  - 1
+  - 2
+  - 3
+  - G
+  - H
+  - M
+  - N
+  - S
+  - T
+  - R
+  - 4
+  - W
+  - Y
+  - You
+  - Me
 --- !u!114 &386509136
 MonoBehaviour:
   m_ObjectHideFlags: 0

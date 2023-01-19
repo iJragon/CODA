@@ -6,12 +6,14 @@ using Mediapipe;
 using System;
 
 public class HandDetection : MonoBehaviour {
-    public Dictionary<int, string> _PredictionDictionary;
+    public Dictionary<string, int> predictionMapToNums;
 
     public static string symbol;
     public static List<double> landmarks;
 
     private C_SVC model;
+
+    [SerializeField] private List<string> signs;
 
     private void Start() {
         if (model == null) {
@@ -21,11 +23,9 @@ public class HandDetection : MonoBehaviour {
                 Debug.LogError("Model doesn't exist. Make sure to train first!");
             }
         }
-        _PredictionDictionary = new Dictionary<int, string>() {
-            { 0, "a" }, { 1, "b" }, { 2, "c" }, { 3, "d" }, { 4, "e" }, { 5, "h" }, { 6, "l" }, { 7, "1" }, { 8, "2" },
-            { 9, "3" }, { 10, "g" }, { 11, "h" }, { 12, "m" }, { 13, "n" }, { 14, "s" }, { 15, "t" }, { 16, "r" },
-            { 17, "4" }, { 18, "w" }, { 19, "y" }, { 20, "you"}, { 21, "me" }
-        };
+
+        predictionMapToNums = signs.Select((value, index) =>
+        new { value, index }).ToDictionary(pair => pair.value.ToLower(), pair => pair.index);
     }
 
     public void DetectSymbol(IList<NormalizedLandmarkList> _currentHandLandmarkLists) {
@@ -44,7 +44,7 @@ public class HandDetection : MonoBehaviour {
 
                 var newLandmarks = SymbolClassificationProblemBuilder.CreateNodes(preProcessedLandmarkList.ToArray());
                 var predictedSymbol = model.Predict(newLandmarks);
-                symbol = _PredictionDictionary[(int)predictedSymbol];
+                symbol = signs[(int)predictedSymbol];
 
                 #region Mathematical NumPy method
                 ////Closest scalar distance
