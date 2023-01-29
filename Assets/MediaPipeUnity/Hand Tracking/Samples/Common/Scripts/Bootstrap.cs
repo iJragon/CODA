@@ -27,7 +27,7 @@ namespace Mediapipe.Unity
     [SerializeField] private AssetLoaderType _assetLoaderType;
     [SerializeField] private bool _enableGlog = true;
 
-    public InferenceMode inferenceMode { get; private set; }
+        public InferenceMode inferenceMode { get; private set; }
     public bool isFinished { get; private set; }
     private bool _isGlogInitialized;
 
@@ -43,7 +43,7 @@ namespace Mediapipe.Unity
 
       Protobuf.SetLogHandler(Protobuf.DefaultLogHandler);
 
-      Logger.LogInfo(_TAG, "Setting global flags...");
+      //Logger.LogInfo(_TAG, "Setting global flags...");
       GlobalConfigManager.SetFlags();
 
       if (_enableGlog)
@@ -60,7 +60,7 @@ namespace Mediapipe.Unity
         _isGlogInitialized = true;
       }
 
-      Logger.LogInfo(_TAG, "Initializing AssetLoader...");
+      //Logger.LogInfo(_TAG, "Initializing AssetLoader...");
       switch (_assetLoaderType)
       {
         case AssetLoaderType.AssetBundle:
@@ -102,7 +102,7 @@ namespace Mediapipe.Unity
         }
       }
 
-      Logger.LogInfo(_TAG, "Preparing ImageSource...");
+      //Logger.LogInfo(_TAG, "Preparing ImageSource...");
       ImageSourceProvider.ImageSource = GetImageSource(_defaultImageSource);
 
       isFinished = true;

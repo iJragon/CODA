@@ -54,7 +54,7 @@ namespace Mediapipe.Unity
     {
       if (!TryGetComponent<RectTransform>(out var _))
       {
-        Logger.LogVerbose(GetType().Name, $"Adding RectTransform to {gameObject.name}");
+        //Logger.LogVerbose(GetType().Name, $"Adding RectTransform to {gameObject.name}");
         var rectTransform = gameObject.AddComponent<RectTransform>();
         // stretch width and height by default
         rectTransform.pivot = new Vector2(0.5f, 0.5f);

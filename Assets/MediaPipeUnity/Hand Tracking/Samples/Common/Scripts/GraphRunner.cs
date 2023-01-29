@@ -113,14 +113,14 @@ namespace Mediapipe.Unity
     {
       this.runningMode = runningMode;
 
-      Logger.LogInfo(TAG, $"Config Type = {configType}");
-      Logger.LogInfo(TAG, $"Running Mode = {runningMode}");
+      //Logger.LogInfo(TAG, $"Config Type = {configType}");
+      //Logger.LogInfo(TAG, $"Running Mode = {runningMode}");
 
       InitializeCalculatorGraph().AssertOk();
       _stopwatch = new Stopwatch();
       _stopwatch.Start();
 
-      Logger.LogInfo(TAG, "Loading dependent assets...");
+      //Logger.LogInfo(TAG, "Loading dependent assets...");
       var assetRequests = RequestDependentAssets();
       yield return new WaitWhile(() => assetRequests.Any((request) => request.keepWaiting));
 
@@ -279,7 +279,7 @@ namespace Mediapipe.Unity
         inputVerticallyFlipped = !inputVerticallyFlipped;
       }
 
-      Logger.LogDebug($"input_rotation = {inputRotation}, input_horizontally_flipped = {inputHorizontallyFlipped}, input_vertically_flipped = {inputVerticallyFlipped}");
+      //Logger.LogDebug($"input_rotation = {inputRotation}, input_horizontally_flipped = {inputHorizontallyFlipped}, input_vertically_flipped = {inputVerticallyFlipped}");
 
       sidePacket.Emplace("input_rotation", new IntPacket((int)inputRotation));
       sidePacket.Emplace("input_horizontally_flipped", new BoolPacket(inputHorizontallyFlipped));

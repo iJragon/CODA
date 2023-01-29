@@ -324,7 +324,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c45f7aa497f5afd48a0c90e12fec2e73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  temp: {fileID: 1171365101}
+  dDetect: {fileID: 1171365101}
 --- !u!114 &275874976
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -337,6 +337,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e6be71b11bb85f419369b56536d0520, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  signs:
+  - A
+  - B
+  - C
+  - D
+  - E
+  - 
+  - L
+  - 1
+  - 2
+  - 3
+  - G
+  - H
+  - M
+  - N
+  - S
+  - T
+  - R
+  - 4
+  - W
+  - Y
+  - You
+  - Me
 --- !u!114 &275874977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -349,6 +372,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fda25fa6fe609904fa069b339ac1b5ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  FPSText: {fileID: 0}
+  currSymbol: {fileID: 0}
+  status: {fileID: 0}
+  enableRunTimeTraining: 0
 --- !u!1001 &296605791
 PrefabInstance:
   m_ObjectHideFlags: 0

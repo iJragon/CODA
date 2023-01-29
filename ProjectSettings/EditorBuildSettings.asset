@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/MediaPipeUnity/Hand Tracking/Hand Tracking.unity
     guid: 08035b20d3836a599ad2fd3d81e41ee5
+  - enabled: 0
+    path: Assets/Scenes/Training.unity
+    guid: 0b38fdac398df5043a61da7461716fd6
   m_configObjects: {}

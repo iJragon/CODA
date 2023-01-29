@@ -47,7 +47,7 @@ namespace Mediapipe.Unity
 
       if (File.Exists(destFilePath) && !overwrite)
       {
-        Logger.LogInfo(_TAG, $"{name} will not be copied to {destFilePath} because it already exists");
+        //Logger.LogInfo(_TAG, $"{name} will not be copied to {destFilePath} because it already exists");
         yield break;
       }
 
@@ -80,7 +80,7 @@ namespace Mediapipe.Unity
       // TODO: try AsyncReadManager
       try
       {
-        Logger.LogDebug($"{path} is requested");
+        //Logger.LogDebug($"{path} is requested");
 
         var cachePath = PathToResourceAsFile(path);
         if (!File.Exists(cachePath))

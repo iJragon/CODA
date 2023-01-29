@@ -72,7 +72,7 @@ namespace Mediapipe.Unity
 
           if (!File.Exists(ConfigFilePath))
           {
-            Logger.LogDebug(_TAG, $"Global config file does not exist: {ConfigFilePath}");
+            //Logger.LogDebug(_TAG, $"Global config file does not exist: {ConfigFilePath}");
           }
           else
           {

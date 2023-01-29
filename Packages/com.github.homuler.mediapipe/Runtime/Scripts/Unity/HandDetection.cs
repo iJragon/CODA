@@ -44,30 +44,7 @@ public class HandDetection : MonoBehaviour {
 
                 var newLandmarks = SymbolClassificationProblemBuilder.CreateNodes(preProcessedLandmarkList.ToArray());
                 var predictedSymbol = model.Predict(newLandmarks);
-                symbol = signs[(int)predictedSymbol];
-
-                #region Mathematical NumPy method
-                ////Closest scalar distance
-                //double closestDist = double.MaxValue;
-                //string mostProbableK = null;
-
-                ////Examine all the gts we have in the dict and check which one is the closest
-                //var groundTruths = GetGroundTruths();
-                //var sh = np.array(landmarkList).shape;
-                //var npPreprocessedLandmarkList = np.array(preProcessedLandmarkList).reshape(sh);
-                //var currDist = double.MaxValue;
-
-                //foreach (var k in groundTruths.Keys) {
-                //  var diff = np.array(groundTruths[k]) - npPreprocessedLandmarkList;
-                //  //var currDist = np.sum(np.linalg.norm(diff, axis=0));
-                //  //if (currDist < closestDist) {
-                //  //  closestDist = currDist;
-                //  //  mostProbableK = k;
-                //  //}
-                //}
-
-                //Debug.Log(mostProbableK);
-                #endregion
+                symbol = ((char)((int)predictedSymbol)).ToString();//signs[(int)predictedSymbol];
             }
         }
     }

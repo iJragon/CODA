@@ -91,12 +91,12 @@ public class TrainModelScript : MonoBehaviour {
         #endregion
     }
 
-    private void AddToKeypoint(int key) {
-        var csvPath = Application.dataPath + @"/Resources/keypoint.csv";
+    public static void AddToKeypoint(int key, string path, List<double> landmarks) {
+        var csvPath = Application.dataPath + path;
 
         StreamWriter keypoint = new StreamWriter(csvPath, true);
 
-        keypoint.WriteLine(key + "," + string.Join(",", HandDetection.landmarks.Select(x => x.ToString())));
+        keypoint.WriteLine(key + "," + string.Join(",", landmarks.Select(x => x.ToString())));
         keypoint.Flush();
         keypoint.Close();
     }
@@ -114,7 +114,7 @@ public class TrainModelScript : MonoBehaviour {
         if (detection.predictionMapToNums.ContainsKey(sign)) {
             int mappedNum = detection.predictionMapToNums[sign];
             CaptureStatus(statuses.Capturing);
-            AddToKeypoint(mappedNum);
+            AddToKeypoint(mappedNum, @"/Resources/keypoint.csv", HandDetection.landmarks);
         } else
             currStatus = statuses.ErrorFrom;
     }
