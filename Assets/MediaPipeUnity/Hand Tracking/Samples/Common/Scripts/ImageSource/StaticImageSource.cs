@@ -30,7 +30,7 @@ namespace Mediapipe.Unity {
         List<double> currLandmarks;
         public bool datasetComplete => currImageIdx >= _availableSources.Length;
         private int currImageIdx;
-        private const float timeLimit = 5f;
+        private const float timeLimit = 3f;
         private float currTime;
 
         private Texture image {
@@ -62,7 +62,7 @@ namespace Mediapipe.Unity {
         public override bool isPlaying => _isPlaying;
 
         private void Awake() {
-            currImageIdx = File.ReadAllLines(Application.dataPath + @"/Resources/keypointNew.csv").Length;
+            currImageIdx = 0;// File.ReadAllLines(Application.dataPath + @"/Resources/keypointNew.csv").Length;
         }
 
         public override void SelectSource(int sourceId) {
@@ -94,7 +94,7 @@ namespace Mediapipe.Unity {
                 }
                 if (currTime >= timeLimit) {
                     Debug.Log("Time limit exceeded for Index " + currImageIdx);
-                    currImageIdx++;
+                    currImageIdx += 10;
                     currTime = 0;
                 }
             }
