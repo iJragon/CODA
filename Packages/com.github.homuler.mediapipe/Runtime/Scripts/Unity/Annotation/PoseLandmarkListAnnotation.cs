@@ -239,6 +239,9 @@ namespace Mediapipe.Unity
           _landmarkListAnnotation[i].SetActive(false);
         }
       }
+      if (mask.HasFlag(BodyParts.LeftHand)) {
+                Debug.Log("yo");
+            }
       if (!mask.HasFlag(BodyParts.LeftArm))
       {
         // deactivate left elbow to hide left arm

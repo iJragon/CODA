@@ -30,7 +30,7 @@ namespace Mediapipe.Unity {
         List<double> currLandmarks;
         public bool datasetComplete => currImageIdx >= _availableSources.Length;
         private int currImageIdx;
-        private const float timeLimit = 3f;
+        private const float timeLimit = 1.5f;
         private float currTime;
 
         private Texture image {
@@ -86,7 +86,8 @@ namespace Mediapipe.Unity {
             if (enableImageDataset) {
                 prevLandmarks = currLandmarks;
                 currLandmarks = HandDetection.landmarks;
-                if (prevLandmarks != currLandmarks) {
+                if (prevLandmarks != currLandmarks && HandDetection.hands["right"] && !HandDetection.hands["left"] 
+                    && MultiHandLandmarkListAnnotationController.handCount == 1) {
                     int key = availableSources[currImageIdx].name[0];
                     TrainModelScript.AddToKeypoint(key, @"/Resources/keypointNew.csv", currLandmarks);
                     currImageIdx++;

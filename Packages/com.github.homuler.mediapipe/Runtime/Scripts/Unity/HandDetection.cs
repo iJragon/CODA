@@ -9,6 +9,7 @@ public class HandDetection : MonoBehaviour {
     public Dictionary<string, int> predictionMapToNums;
 
     public static string symbol;
+    public static Dictionary<string, bool> hands;
     public static List<double> landmarks;
 
     private C_SVC model;
@@ -24,6 +25,10 @@ public class HandDetection : MonoBehaviour {
             }
         }
 
+        hands = new Dictionary<string, bool>() {
+            { "left", false },
+            { "right", false }
+        };
         predictionMapToNums = signs.Select((value, index) =>
         new { value, index }).ToDictionary(pair => pair.value.ToLower(), pair => pair.index);
     }

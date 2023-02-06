@@ -12,8 +12,10 @@ namespace Mediapipe.Unity {
         [SerializeField] private bool _visualizeZ = false;
         [SerializeField] private HandDetection detection;
 
+
         private IList<NormalizedLandmarkList> _currentHandLandmarkLists;
         private IList<ClassificationList> _currentHandedness;
+        public static int handCount;
 
         public void DrawNow(IList<NormalizedLandmarkList> handLandmarkLists, IList<ClassificationList> handedness = null) {
             _currentHandLandmarkLists = handLandmarkLists;
@@ -35,10 +37,27 @@ namespace Mediapipe.Unity {
 
             if (_currentHandedness != null) {
                 annotation.SetHandedness(_currentHandedness);
+                if (_currentHandedness.Count == 2) {
+                    HandDetection.hands["left"] = true;
+                    HandDetection.hands["right"] = true;
+                } else {
+                    if (_currentHandedness[0].Classification[0].Label.Equals("Left")) {
+                        HandDetection.hands["left"] = true;
+                        HandDetection.hands["right"] = false;
+                    } else if (_currentHandedness[0].Classification[0].Label.Equals("Right")) {
+                        HandDetection.hands["left"] = false;
+                        HandDetection.hands["right"] = true;
+                    }
+                }
+                handCount = _currentHandedness.Count;
+            } else {
+                HandDetection.hands["left"] = false;
+                HandDetection.hands["right"] = false;
             }
             _currentHandedness = null;
 
             detection.DetectSymbol(_currentHandLandmarkLists);
+            
         }
     }
 }
