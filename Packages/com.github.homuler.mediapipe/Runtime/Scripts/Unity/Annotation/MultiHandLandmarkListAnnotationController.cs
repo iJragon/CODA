@@ -37,6 +37,8 @@ namespace Mediapipe.Unity {
 
             if (_currentHandedness != null) {
                 annotation.SetHandedness(_currentHandedness);
+            }
+            if (_currentHandedness != null) {
                 if (_currentHandedness.Count == 2) {
                     HandDetection.hands["left"] = true;
                     HandDetection.hands["right"] = true;
@@ -54,6 +56,7 @@ namespace Mediapipe.Unity {
                 HandDetection.hands["left"] = false;
                 HandDetection.hands["right"] = false;
             }
+
             _currentHandedness = null;
 
             detection.DetectSymbol(_currentHandLandmarkLists);

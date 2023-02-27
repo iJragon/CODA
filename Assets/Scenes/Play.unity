@@ -1236,7 +1236,19 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1245548319}
+        m_TargetAssemblyTypeName: LyricGenerator, Assembly-CSharp
+        m_MethodName: ChangeAdvancedMode
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 0
 --- !u!1 &355165911
 GameObject:
@@ -6430,7 +6442,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!212 &1189048005
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -6960,6 +6972,7 @@ MonoBehaviour:
   errorMessage: {fileID: 4628224638117807961, guid: 97da07c7f0f95c348aea10d2e93e9ccc, type: 3}
   glowEffect: {fileID: 621947036}
   textfield: {fileID: 1191203015}
+  advancedToggle: {fileID: 326777237}
   ssDict:
   - sign: 1
     sprite: {fileID: 21300000, guid: 207a3c92a49dac14c952e4f408f03473, type: 3}
@@ -7037,6 +7050,83 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: 423d3e5a3234fbc43b1ea1c09a13f947, type: 3}
   - sign: me
     sprite: {fileID: 21300000, guid: 0ad7a8423abff8b409e3c92b40f25d62, type: 3}
+  ssDictAdvanced:
+  - sign: 1
+    sprite: {fileID: 21300000, guid: c38d18a84499ef54eba7a967d90c89e5, type: 3}
+  - sign: 2
+    sprite: {fileID: 21300000, guid: 75a2380cd1f1d5b48ba70e2fcc242ab7, type: 3}
+  - sign: 3
+    sprite: {fileID: 21300000, guid: f40a6c4782ce6de47b7a4abd93bbd964, type: 3}
+  - sign: 4
+    sprite: {fileID: 21300000, guid: 32ead5621224bc0458164e986c7a80d7, type: 3}
+  - sign: 5
+    sprite: {fileID: 21300000, guid: 6d0c94cf8eee2d24f9050f1d86a1f6e6, type: 3}
+  - sign: 6
+    sprite: {fileID: 21300000, guid: 45c43b472f6b33143b8250d57b79aee4, type: 3}
+  - sign: 7
+    sprite: {fileID: 21300000, guid: b1f2034680c4e9443930bbbc3efc50c0, type: 3}
+  - sign: 8
+    sprite: {fileID: 21300000, guid: d4022cbccabb52d468ea1077a7ef1637, type: 3}
+  - sign: 9
+    sprite: {fileID: 21300000, guid: a0755a4e8bd36914683be4bc1813f942, type: 3}
+  - sign: 0
+    sprite: {fileID: 21300000, guid: 9a17dd4fec35f8344b34214d7c47ab6d, type: 3}
+  - sign: a
+    sprite: {fileID: 21300000, guid: 9a4713cbfb7650242aef6f2140c56e82, type: 3}
+  - sign: b
+    sprite: {fileID: 21300000, guid: d669c81a02b15594f8e972ad8fccce26, type: 3}
+  - sign: c
+    sprite: {fileID: 21300000, guid: 21f4c1cd79a9d144795139d36c1494d2, type: 3}
+  - sign: d
+    sprite: {fileID: 21300000, guid: fd1f27ce8effd5f41b6e730ef410af6c, type: 3}
+  - sign: e
+    sprite: {fileID: 21300000, guid: 66e2f25339cea3f4fb7a672f9d8b0bb9, type: 3}
+  - sign: f
+    sprite: {fileID: 21300000, guid: f3644da7843b1524c9d96a1520f41dd1, type: 3}
+  - sign: g
+    sprite: {fileID: 21300000, guid: 1d9ccc225e82ae241a1c55afc7bdfdc5, type: 3}
+  - sign: h
+    sprite: {fileID: 21300000, guid: 83f4c286642911d44960636b3c2293e5, type: 3}
+  - sign: i
+    sprite: {fileID: 21300000, guid: 8f7b372f091716d45bd7049378038963, type: 3}
+  - sign: j
+    sprite: {fileID: 21300000, guid: 202902fedac1efc46a53b54051dd7b6a, type: 3}
+  - sign: k
+    sprite: {fileID: 21300000, guid: b418f18c0b13bce48958fa45e4d671e1, type: 3}
+  - sign: l
+    sprite: {fileID: 21300000, guid: 4b63812159f0e7b45b0e6951d879c8e2, type: 3}
+  - sign: m
+    sprite: {fileID: 21300000, guid: 167cdbeef5d88c24d90d56cd095aea0e, type: 3}
+  - sign: n
+    sprite: {fileID: 21300000, guid: 785df8abd7cde0044ac2df37d9f3c780, type: 3}
+  - sign: o
+    sprite: {fileID: 21300000, guid: 80566de05e674ba469c707ef354781be, type: 3}
+  - sign: p
+    sprite: {fileID: 21300000, guid: 5af3f5d2c45061b43b0c11cb383dd444, type: 3}
+  - sign: q
+    sprite: {fileID: 21300000, guid: f810e8d31014e02458a96947871159e4, type: 3}
+  - sign: r
+    sprite: {fileID: 21300000, guid: e817f30ed9be4a048b9da38092b91bd0, type: 3}
+  - sign: s
+    sprite: {fileID: 21300000, guid: 4cdb53fe22f74304485ab341efc6a7dd, type: 3}
+  - sign: t
+    sprite: {fileID: 21300000, guid: 961c71b3c52dbee4aad5430abbcb34d9, type: 3}
+  - sign: u
+    sprite: {fileID: 21300000, guid: ba358b72d2584b043bfee73548d18175, type: 3}
+  - sign: v
+    sprite: {fileID: 21300000, guid: 1c9708a6087e4d648812e1ad88d229ac, type: 3}
+  - sign: w
+    sprite: {fileID: 21300000, guid: 3d009075e0ecea14e893bc5de16b8400, type: 3}
+  - sign: x
+    sprite: {fileID: 21300000, guid: 246b72ef393cccf43aff777fd4853974, type: 3}
+  - sign: y
+    sprite: {fileID: 21300000, guid: 9c13780036bd67e40a9d7905dc3742f4, type: 3}
+  - sign: z
+    sprite: {fileID: 21300000, guid: 4d6e86d1eab391144a1babfa0a47bde4, type: 3}
+  - sign: you
+    sprite: {fileID: 21300000, guid: f8301f2941167c049971fe940f2d83db, type: 3}
+  - sign: me
+    sprite: {fileID: 21300000, guid: 23c29e06a650597498bb2e005aa513de, type: 3}
 --- !u!114 &1245548321
 MonoBehaviour:
   m_ObjectHideFlags: 0

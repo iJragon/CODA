@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LyricGenerator : MonoBehaviour {
     public static LyricGenerator instance; 
@@ -36,6 +37,8 @@ public class LyricGenerator : MonoBehaviour {
 
     private string currSign;                                        // Current sign player is doing - number, letter, or word
     private Dictionary<string, Sprite> signToSprites;               // Dictionary of signs (numbers, letters, words) to their respective sprites
+    [SerializeField] private Toggle advancedToggle;                 // Toggle component to see if advanced mode is turned on
+    private signToSprite[] currDict;                                // Current Dict to use for alphabet (advanced or not)
 
     [Serializable]
     public struct signToSprite {                                    // A fake dictionary to show up on the inspector
@@ -43,6 +46,7 @@ public class LyricGenerator : MonoBehaviour {
         public Sprite sprite;
     };
     public signToSprite[] ssDict;
+    public signToSprite[] ssDictAdvanced;
 
     public struct signToAccuracy {                                  // Key-Value pair for sign to number of times they were missed
         public string sign;
@@ -57,8 +61,9 @@ public class LyricGenerator : MonoBehaviour {
             instance = this;
 
         /* Initialize each <key, value> of the dictionary depending on our fake dictionary on the inspector */
+        currDict = advancedToggle.isOn ? ssDictAdvanced : ssDict;
         signToSprites = new Dictionary<string, Sprite>();
-        foreach (var s2s in ssDict)
+        foreach (var s2s in currDict)
             signToSprites[s2s.sign] = s2s.sprite;
 
         signScreenOrder = new Queue<GameObject>();
@@ -187,6 +192,9 @@ public class LyricGenerator : MonoBehaviour {
     /// </summary>
     /// <param name="letter"></param> character that we are removing from the screen
     public void RemoveLyric(string sign) {
+        if (sign == null)
+            return;
+
         /* Get the lowest symbol on the screen
          * If the corresponding sign on the symbol matches with what the player signed, then give score
          * If the player doesn't sign anything or is incorrect and the symbol despawns, then error
@@ -243,6 +251,14 @@ public class LyricGenerator : MonoBehaviour {
         }
 
         textfield.text = ((int)(((float)totalCorrect / symbolsTerminated) * 100)).ToString() + "%";
+    }
+
+    public void ChangeAdvancedMode() {
+        /* Initialize each <key, value> of the dictionary depending on our fake dictionary on the inspector */
+        currDict = advancedToggle.isOn ? ssDictAdvanced : ssDict;
+        signToSprites = new Dictionary<string, Sprite>();
+        foreach (var s2s in currDict)
+            signToSprites[s2s.sign] = s2s.sprite;
     }
 
     public signToAccuracy[] GetWorstSigns() {
