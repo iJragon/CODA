@@ -406,7 +406,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 649240821}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -1416,6 +1416,18 @@ MonoBehaviour:
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: exit
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 1245548321}
+          m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+          m_MethodName: Shutdown
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
 --- !u!1 &358246394
@@ -2749,7 +2761,7 @@ RectTransform:
   m_Children:
   - {fileID: 1217539792}
   m_Father: {fileID: 649240821}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -2820,17 +2832,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 621947036}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 649240821}
+  m_Father: {fileID: 1620185260}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -435}
+  m_AnchoredPosition: {x: 0, y: 65}
   m_SizeDelta: {x: 1920, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &621947038
@@ -3128,7 +3140,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 621947037}
   - {fileID: 1060943113}
   - {fileID: 1620185260}
   - {fileID: 1160359957}
@@ -4843,7 +4854,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 649240821}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -5022,7 +5033,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: L
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 79dadd06786f9b34aa7f9bbe1843ef42, type: 2}
   m_sharedMaterial: {fileID: -1764200465081585245, guid: 79dadd06786f9b34aa7f9bbe1843ef42, type: 2}
@@ -5985,7 +5996,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 649240821}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -7179,9 +7190,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   songs:
-  - {fileID: 11400000, guid: 7744609349c33524da48756bfdff7af2, type: 2}
-  - {fileID: 11400000, guid: f34d450ccdf66504baa149f5fd176e09, type: 2}
   - {fileID: 11400000, guid: 33406c62d7babe040a056e4fe67d86b6, type: 2}
+  - {fileID: 11400000, guid: f34d450ccdf66504baa149f5fd176e09, type: 2}
   currentSongIdx: 0
   pausedSongSelectionIdx: 0
   cover: {fileID: 1123563851}
@@ -8905,9 +8915,10 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 621947037}
   m_Father: {fileID: 649240821}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}

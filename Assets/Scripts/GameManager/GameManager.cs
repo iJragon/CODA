@@ -208,6 +208,13 @@ public class GameManager : MonoBehaviour {
     }
 
     /// <summary>
+    /// Exits the game upon hitting the Shutdown button
+    /// </summary>
+    public void Shutdown() {
+        Application.Quit();
+    }
+
+    /// <summary>
     /// Black wallpaper becomes opague, video becomes transparent
     /// </summary>
     public void FadeIn() {
